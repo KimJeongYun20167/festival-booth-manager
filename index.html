@@ -3,44 +3,42 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
- content="width=device-width,initial-scale=1">
-<title>동아리 QR 스캐너</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026 동아리 축제 관리자</title>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
-*{box-sizing:border-box}
-body{
- font-family:Arial,sans-serif;
- background:#f4f6fb;
- padding:20px;
- text-align:center;
+* { box-sizing: border-box; }
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6fb;
+  text-align: center;
+  padding: 20px;
 }
-.card{
- background:white;
- max-width:420px;
- margin:25px auto;
- padding:24px;
- border-radius:16px;
+.card {
+  max-width: 430px;
+  margin: 24px auto;
+  padding: 24px;
+  background: white;
+  border-radius: 16px;
 }
-button{
- width:100%;
- padding:14px;
- margin-top:12px;
- border:0;
- border-radius:10px;
- background:#3858d6;
- color:white;
- font-size:16px;
+input, select, button {
+  width: 100%;
+  padding: 14px;
+  margin: 8px 0;
+  font-size: 16px;
+  border-radius: 10px;
 }
-.secondary{background:#e8ebf4;color:#333}
-#reader{width:100%;margin-top:15px}
-#result{
- background:#e9f8ef;
- padding:14px;
- border-radius:10px;
- margin-top:15px;
- overflow-wrap:anywhere;
+input, select { border: 1px solid #ccc; }
+button {
+  border: none;
+  background: #3858d6;
+  color: white;
+  cursor: pointer;
 }
+.secondary { background: #e8ebf4; color: #333; }
+#reader { width: 100%; margin: 15px 0; }
+#qrValue { overflow-wrap: anywhere; }
+#loginMessage { color: #b42318; }
 </style>
 </head>
 
@@ -50,157 +48,195 @@ button{
   <h2>2026 동아리 축제</h2>
   <h3>관리자 로그인</h3>
 
-  <p>담당 동아리</p>
-  <select id="club" style="width:100%;padding:14px">
+  <label for="club">동아리 선택</label>
+  <select id="club">
     <option value="club01">NBRC</option>
-    <option value="club02">방송부</option>
-    <option value="club03">이슈있슈</option>
   </select>
 
-  <p>관리자 코드</p>
+  <p>※ 초기 연결 테스트용 이메일 입력</p>
+  <input id="email" type="email"
+         placeholder="등록한 테스트 이메일"
+         autocomplete="username">
+
   <input id="adminCode" type="password"
-    placeholder="관리자 코드"
-    style="width:100%;padding:14px">
+         placeholder="관리자 코드"
+         autocomplete="current-password">
 
-  <button onclick="showDemo()">
-    관리자 로그인
-  </button>
-
-  <p id="loginMessage" style="color:#666"></p>
+  <button id="loginBtn">관리자 로그인</button>
+  <p id="loginMessage"></p>
 </div>
 
-<div id="managerPage" style="display:none">
-<div class="card">
-```
+<div class="card" id="managerPage" hidden>
+  <h2 id="managerTitle">관리자 페이지</h2>
+  <p>로그인 및 동아리 권한 확인 완료</p>
 
-### ③ 기존 코드 맨 아래의 `</body>` 앞에 추가하기
+  <h3>학생 QR 스캐너</h3>
+  <button id="startBtn">QR 스캔 시작</button>
+  <div id="reader"></div>
+  <p id="status">스캔 대기 중</p>
 
-```html
+  <div id="result" hidden>
+    <strong>QR 인식 성공!</strong>
+    <p id="qrValue"></p>
+  </div>
+
+  <button class="secondary" id="stopBtn">스캔 종료</button>
+  <button class="secondary" id="logoutBtn">로그아웃</button>
+
+  <p style="color:#777;font-size:13px">
+    현재는 로그인·QR 인식 테스트 단계입니다.
+    실제 입퇴장 기록은 아직 저장하지 않습니다.
+  </p>
 </div>
 
-<script>
-function showDemo() {
-  document.getElementById('loginMessage').textContent =
-    '아직 서버 인증 연결 전입니다. 현재는 화면 테스트만 가능합니다.';
-}
-</script>
-```
-
-여기서 **중요한 점**이 있어. 이번 단계에서 관리자 코드를 입력하더라도 실제 로그인하지는 않아. GitHub Pages는 공개 웹사이트이기 때문에 관리자 코드를 HTML이나 JavaScript에 직접 넣어 인증하면 누구나 확인할 수 있거든.
-
-따라서 실제 로그인 기능은 다음 단계에서 서버와 연동해야 해. 지금은 관리자 로그인 화면이 정상적으로 표시되는지만 확인하는 단계야.
-
-### ④ 저장하기
-
-**Commit changes → Commit changes**를 눌러 저장해 줘.
-
-이후 GitHub Pages 사이트를 새로고침하면 기존 QR 스캐너 화면 대신 관리자 로그인 화면이 먼저 나타나야 해.
-
----
-
-**우선 여기까지만 진행해 줘!** 관리자 로그인 화면에 동아리 선택 목록과 관리자 코드 입력창이 나타나는지 확인해 보자.
-
-그다음에는 코드를 반복해서 덧붙이다가 오류가 생기지 않도록, 통합된 관리자 화면 전체를 한 번에 정리하고 안전한 서버 인증을 연결하자.
-<h2>2026 동아리 축제</h2>
-<h3>학생 QR 스캐너</h3>
-
-<button id="startBtn" onclick="startScan()">
-QR 스캔 시작
-</button>
-
-<div id="reader"></div>
-<p id="status">스캔 대기 중</p>
-
-<div id="result" hidden>
-<strong>QR 인식 성공!</strong>
-<p id="qrValue"></p>
-</div>
-
-<button class="secondary" onclick="stopScan()">
-스캔 종료
-</button>
-</div>
-
-<script>
-let scanner=null;
-let running=false;
-let processing=false;
-
-async function startScan(){
- if(running)return;
- const status=document.getElementById('status');
-
- if(typeof Html5Qrcode==='undefined'){
-  status.textContent='QR 라이브러리를 불러오지 못했습니다.';
-  return;
- }
-
- try{
-  if(!scanner)scanner=new Html5Qrcode('reader');
-
-  await scanner.start(
-   {facingMode:'environment'},
-   {fps:10,qrbox:{width:220,height:220}},
-   async function(decodedText){
-    if(processing)return;
-    processing=true;
-
-    document.getElementById('qrValue')
-      .textContent=decodedText;
-    document.getElementById('result').hidden=false;
-    status.textContent='QR 인식 완료';
-
-    await stopScan();
-   },
-   function(){}
-  );
-
-  running=true;
-  status.textContent='QR코드를 카메라에 비춰 주세요.';
- }catch(e){
-  status.textContent='카메라 오류: '+e.message;
- }
-}
-
-async function stopScan(){
- if(scanner&&running){
-  try{
-   await scanner.stop();
-  }catch(e){
-   console.error(e);
-  }
- }
- running=false;
- processing=false;
-}
-</script>
 <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+import { initializeApp }
+  from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
 
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyC2VNRvtLdE6DZQjVo3MSdyDigU8s99rI0",
-    authDomain: "festival-booth-manager-da0de.firebaseapp.com",
-    projectId: "festival-booth-manager-da0de",
-    storageBucket: "festival-booth-manager-da0de.firebasestorage.app",
-    messagingSenderId: "18896020742",
-    appId: "1:18896020742:web:a0f3e5f89a4c40308aea87"
-  };
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
- 
-  // Firebase 연결 초기화 확인
-  const status = document.createElement("p");
-  status.textContent = "Firebase 연결 초기화 성공!";
-  status.style.color = "green";
-  status.style.textAlign = "center";
-  document.body.appendChild(status);
+import {
+  getFirestore,
+  doc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyC2VNRvtLdE6DZQjVo3MSdyDigU8s99rI0",
+  authDomain: "festival-booth-manager-da0de.firebaseapp.com",
+  projectId: "festival-booth-manager-da0de",
+  storageBucket: "festival-booth-manager-da0de.firebasestorage.app",
+  messagingSenderId: "18896020742",
+  appId: "1:18896020742:web:a0f3e5f89a4c40308aea87"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const el = id => document.getElementById(id);
+
+let scanner = null;
+let running = false;
+let busy = false;
+let authorizedClub = null;
+
+async function checkAccess(user) {
+  const snap = await getDoc(doc(db, "admins", user.uid));
+  if (!snap.exists()) {
+    throw new Error("관리자 권한 정보가 없습니다.");
+  }
+  const clubId = snap.data().clubId;
+  if (clubId !== "club01") {
+    throw new Error("NBRC 관리자 권한이 없습니다.");
+  }
+  return clubId;
+}
+
+async function showAuthorizedPage(user) {
+  authorizedClub = await checkAccess(user);
+  el("loginPage").hidden = true;
+  el("managerPage").hidden = false;
+  el("managerTitle").textContent = "NBRC 관리자 페이지";
+}
+
+el("loginBtn").addEventListener("click", async () => {
+  const email = el("email").value.trim();
+  const password = el("adminCode").value;
+  const selectedClub = el("club").value;
+
+  el("loginMessage").textContent = "로그인 확인 중...";
+
+  try {
+    if (!email || !password) {
+      throw new Error("이메일과 관리자 코드를 입력해 주세요.");
+    }
+
+    const credential = await signInWithEmailAndPassword(
+      auth, email, password
+    );
+
+    const clubId = await checkAccess(credential.user);
+
+    if (clubId !== selectedClub) {
+      throw new Error("선택한 동아리와 관리자 계정이 다릅니다.");
+    }
+
+    await showAuthorizedPage(credential.user);
+    el("loginMessage").textContent = "";
+    el("adminCode").value = "";
+  } catch (error) {
+    await signOut(auth);
+    el("loginMessage").textContent =
+      "로그인 실패: " + error.message;
+  }
+});
+
+onAuthStateChanged(auth, async user => {
+  if (!user) {
+    authorizedClub = null;
+    el("loginPage").hidden = false;
+    el("managerPage").hidden = true;
+    return;
+  }
+
+  try {
+    await showAuthorizedPage(user);
+  } catch (error) {
+    await signOut(auth);
+    el("loginMessage").textContent = error.message;
+  }
+});
+
+async function startScan() {
+  if (running || busy || authorizedClub !== "club01") return;
+  busy = true;
+
+  try {
+    if (!scanner) scanner = new Html5Qrcode("reader");
+
+    await scanner.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: { width: 220, height: 220 } },
+      async decodedText => {
+        el("qrValue").textContent = decodedText;
+        el("result").hidden = false;
+        el("status").textContent = "QR 인식 성공";
+        await stopScan();
+      },
+      () => {}
+    );
+
+    running = true;
+    el("status").textContent = "학생 QR을 비춰 주세요.";
+  } catch (error) {
+    el("status").textContent = "카메라 오류: " + error.message;
+  } finally {
+    busy = false;
+  }
+}
+
+async function stopScan() {
+  if (scanner && running) {
+    running = false;
+    try { await scanner.stop(); } catch (error) {
+      console.error(error);
+    }
+  }
+}
+
+el("startBtn").addEventListener("click", startScan);
+el("stopBtn").addEventListener("click", stopScan);
+
+el("logoutBtn").addEventListener("click", async () => {
+  await stopScan();
+  await signOut(auth);
+});
 </script>
- 
 </body>
 </html>
