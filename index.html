@@ -2,14 +2,67 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1">
-  <title>동아리 부스 관리자</title>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+<title>동아리 부스 QR 스캐너</title>
+<style>
+body{
+  font-family:Arial,sans-serif;
+  background:#f4f6fb;
+  padding:20px;
+  text-align:center;
+}
+.card{
+  background:white;
+  max-width:420px;
+  margin:30px auto;
+  padding:24px;
+  border-radius:16px;
+}
+video{
+  width:100%;
+  border-radius:12px;
+  background:#222;
+}
+button{
+  width:100%;
+  padding:14px;
+  margin-top:12px;
+  border:0;
+  border-radius:10px;
+  background:#3858d6;
+  color:white;
+  font-size:16px;
+}
+</style>
 </head>
 <body>
-  <h1>2026 동아리 축제</h1>
-  <h2>통합 관리자 페이지</h2>
-  <p>웹사이트 연결 테스트 성공!</p>
+<div class="card">
+  <h2>2026 동아리 축제</h2>
+  <h3>QR 스캐너 테스트</h3>
+  <video id="camera"
+         autoplay playsinline muted></video>
+  <button onclick="startCamera()">
+    카메라 시작
+  </button>
+  <p id="status">카메라 대기 중</p>
+</div>
+
+<script>
+async function startCamera(){
+  const status=document.getElementById('status');
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({
+      video:{facingMode:'environment'},
+      audio:false
+    });
+    document.getElementById('camera').srcObject=stream;
+    status.textContent='카메라 연결 성공!';
+  }catch(e){
+    status.textContent='카메라 오류: '+e.message;
+  }
+}
+</script>
 </body>
 </html>
