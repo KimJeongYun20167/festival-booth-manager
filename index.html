@@ -43,8 +43,64 @@ button{
 }
 </style>
 </head>
+
 <body>
+
+<div class="card" id="loginPage">
+  <h2>2026 동아리 축제</h2>
+  <h3>관리자 로그인</h3>
+
+  <p>담당 동아리</p>
+  <select id="club" style="width:100%;padding:14px">
+    <option value="club01">NBRC</option>
+    <option value="club02">방송부</option>
+    <option value="club03">이슈있슈</option>
+  </select>
+
+  <p>관리자 코드</p>
+  <input id="adminCode" type="password"
+    placeholder="관리자 코드"
+    style="width:100%;padding:14px">
+
+  <button onclick="showDemo()">
+    관리자 로그인
+  </button>
+
+  <p id="loginMessage" style="color:#666"></p>
+</div>
+
+<div id="managerPage" style="display:none">
 <div class="card">
+```
+
+### ③ 기존 코드 맨 아래의 `</body>` 앞에 추가하기
+
+```html
+</div>
+
+<script>
+function showDemo() {
+  document.getElementById('loginMessage').textContent =
+    '아직 서버 인증 연결 전입니다. 현재는 화면 테스트만 가능합니다.';
+}
+</script>
+```
+
+여기서 **중요한 점**이 있어. 이번 단계에서 관리자 코드를 입력하더라도 실제 로그인하지는 않아. GitHub Pages는 공개 웹사이트이기 때문에 관리자 코드를 HTML이나 JavaScript에 직접 넣어 인증하면 누구나 확인할 수 있거든.
+
+따라서 실제 로그인 기능은 다음 단계에서 서버와 연동해야 해. 지금은 관리자 로그인 화면이 정상적으로 표시되는지만 확인하는 단계야.
+
+### ④ 저장하기
+
+**Commit changes → Commit changes**를 눌러 저장해 줘.
+
+이후 GitHub Pages 사이트를 새로고침하면 기존 QR 스캐너 화면 대신 관리자 로그인 화면이 먼저 나타나야 해.
+
+---
+
+**우선 여기까지만 진행해 줘!** 관리자 로그인 화면에 동아리 선택 목록과 관리자 코드 입력창이 나타나는지 확인해 보자.
+
+그다음에는 코드를 반복해서 덧붙이다가 오류가 생기지 않도록, 통합된 관리자 화면 전체를 한 번에 정리하고 안전한 서버 인증을 연결하자.
 <h2>2026 동아리 축제</h2>
 <h3>학생 QR 스캐너</h3>
 
