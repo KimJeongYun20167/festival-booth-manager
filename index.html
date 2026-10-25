@@ -70,6 +70,17 @@ button {
   <h2 id="managerTitle">관리자 페이지</h2>
   <p>로그인 및 동아리 권한 확인 완료</p>
 
+
+
+  <div style="background:#f4f6fb; padding:20px; border-radius:12px; margin:20px 0;">
+  <h3>현재 부스 인원</h3>
+  <p style="font-size:40px; font-weight:bold; margin:10px 0;">
+    <span id="currentCount">-</span>명
+  </p>
+  <p id="countStatus" style="font-size:13px; color:#777;">
+    인원 정보 불러오는 중...
+  </p>
+</div>
   <h3>학생 QR 스캐너</h3>
   <button id="startBtn">QR 스캔 시작</button>
   <div id="reader"></div>
@@ -103,7 +114,8 @@ import {
 import {
   getFirestore,
   doc,
-  getDoc
+  getDoc,
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -126,6 +138,43 @@ let running = false;
 let busy = false;
 let authorizedClub = null;
 
+let unsubscribeCount = null;
+
+function watchBoothCount(clubId) {
+  // 기존 연결이 있으면 해제
+  if (unsubscribeCount) {
+    unsubscribeCount();
+    unsubscribeCount = null;
+  }
+
+  el("currentCount").textContent = "-";
+  el("countStatus").textContent = "인원 정보 불러오는 중...";
+
+  const boothRef = doc(db, "booths", clubId);
+
+  unsubscribeCount = onSnapshot(
+    boothRef,
+    snapshot => {
+      if (!snapshot.exists()) {
+        el("countStatus").textContent =
+          "부스 데이터를 찾을 수 없습니다.";
+        return;
+      }
+
+      const count = snapshot.data().currentCount;
+
+      el("currentCount").textContent = count;
+      el("countStatus").textContent =
+        "실시간 연결 중";
+    },
+    error => {
+      console.error(error);
+      el("countStatus").textContent =
+        "인원 조회 오류: " + error.message;
+    }
+  );
+}
+
 async function checkAccess(user) {
   const snap = await getDoc(doc(db, "admins", user.uid));
   if (!snap.exists()) {
@@ -143,6 +192,7 @@ async function showAuthorizedPage(user) {
   el("loginPage").hidden = true;
   el("managerPage").hidden = false;
   el("managerTitle").textContent = "NBRC 관리자 페이지";
+  watchBoothCount(authorizedClub);
 }
 
 el("loginBtn").addEventListener("click", async () => {
@@ -179,7 +229,12 @@ el("loginBtn").addEventListener("click", async () => {
 
 onAuthStateChanged(auth, async user => {
   if (!user) {
-    authorizedClub = null;
+  if (unsubscribeCount) {
+    unsubscribeCount();
+    unsubscribeCount = null;
+  }
+
+  authorizedClub = null;
     el("loginPage").hidden = false;
     el("managerPage").hidden = true;
     return;
