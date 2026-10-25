@@ -4,16 +4,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>2026 동아리 축제 관리자</title>
+
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
 <style>
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: Arial, sans-serif;
   background: #f4f6fb;
   text-align: center;
   padding: 20px;
+  margin: 0;
 }
+
 .card {
   max-width: 430px;
   margin: 24px auto;
@@ -21,6 +29,11 @@ body {
   background: white;
   border-radius: 16px;
 }
+
+[hidden] {
+  display: none !important;
+}
+
 input, select, button {
   width: 100%;
   padding: 14px;
@@ -28,79 +41,200 @@ input, select, button {
   font-size: 16px;
   border-radius: 10px;
 }
-input, select { border: 1px solid #ccc; }
+
+input, select {
+  border: 1px solid #ccc;
+}
+
 button {
   border: none;
   background: #3858d6;
   color: white;
   cursor: pointer;
 }
-.secondary { background: #e8ebf4; color: #333; }
-#reader { width: 100%; margin: 15px 0; }
-#qrValue { overflow-wrap: anywhere; }
-#loginMessage { color: #b42318; }
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.secondary {
+  background: #e8ebf4;
+  color: #333;
+}
+
+#reader {
+  width: 100%;
+  margin: 15px 0;
+}
+
+#loginMessage {
+  color: #b42318;
+}
+
+.countBox {
+  background: #f4f6fb;
+  padding: 20px;
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+.countNumber {
+  font-size: 40px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.smallText {
+  font-size: 13px;
+  color: #777;
+}
+
+.resultBox {
+  background: #eef5ff;
+  padding: 16px;
+  margin: 16px 0;
+  border-radius: 12px;
+}
+
+#studentStatus {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+#studentClub {
+  line-height: 1.6;
+}
+
 </style>
 </head>
 
 <body>
 
+<!-- 관리자 로그인 화면 -->
+
 <div class="card" id="loginPage">
+
   <h2>2026 동아리 축제</h2>
   <h3>관리자 로그인</h3>
 
   <label for="club">동아리 선택</label>
+
   <select id="club">
     <option value="club01">NBRC</option>
   </select>
 
-  <p>※ 초기 연결 테스트용 이메일 입력</p>
-  <input id="email" type="email"
-         placeholder="등록한 테스트 이메일"
-         autocomplete="username">
+  <p class="smallText">
+    현재는 NBRC 테스트 단계입니다.
+  </p>
 
-  <input id="adminCode" type="password"
-         placeholder="관리자 코드"
-         autocomplete="current-password">
+  <input
+    id="email"
+    type="email"
+    placeholder="등록한 관리자 이메일"
+    autocomplete="username"
+  >
 
-  <button id="loginBtn">관리자 로그인</button>
+  <input
+    id="adminCode"
+    type="password"
+    placeholder="관리자 코드"
+    autocomplete="current-password"
+  >
+
+  <button id="loginBtn">
+    관리자 로그인
+  </button>
+
   <p id="loginMessage"></p>
+
 </div>
 
+
+<!-- 관리자 메인 화면 -->
+
 <div class="card" id="managerPage" hidden>
-  <h2 id="managerTitle">관리자 페이지</h2>
+
+  <h2 id="managerTitle">
+    관리자 페이지
+  </h2>
+
   <p>로그인 및 동아리 권한 확인 완료</p>
 
 
+  <!-- 현재 인원 표시 -->
 
-  <div style="background:#f4f6fb; padding:20px; border-radius:12px; margin:20px 0;">
-  <h3>현재 부스 인원</h3>
-  <p style="font-size:40px; font-weight:bold; margin:10px 0;">
-    <span id="currentCount">-</span>명
-  </p>
-  <p id="countStatus" style="font-size:13px; color:#777;">
-    인원 정보 불러오는 중...
-  </p>
-</div>
-  <h3>학생 QR 스캐너</h3>
-  <button id="startBtn">QR 스캔 시작</button>
-  <div id="reader"></div>
-  <p id="status">스캔 대기 중</p>
+  <div class="countBox">
 
-  <div id="result" hidden>
-    <strong>QR 인식 성공!</strong>
-    <p id="qrValue"></p>
+    <h3>현재 부스 인원</h3>
+
+    <p class="countNumber">
+      <span id="currentCount">-</span>명
+    </p>
+
+    <p id="countStatus" class="smallText">
+      인원 정보 불러오는 중...
+    </p>
+
   </div>
 
-  <button class="secondary" id="stopBtn">스캔 종료</button>
-  <button class="secondary" id="logoutBtn">로그아웃</button>
 
-  <p style="color:#777;font-size:13px">
-    현재는 로그인·QR 인식 테스트 단계입니다.
-    실제 입퇴장 기록은 아직 저장하지 않습니다.
+  <!-- QR 스캐너 -->
+
+  <h3>학생 QR 스캐너</h3>
+
+  <button id="startBtn">
+    QR 스캔 시작
+  </button>
+
+  <div id="reader"></div>
+
+  <p id="status">
+    스캔 대기 중
   </p>
+
+
+  <!-- 학생 조회 결과 -->
+
+  <div
+    id="result"
+    class="resultBox"
+    hidden
+    aria-live="polite"
+  >
+
+    <h3>학생 QR 확인 결과</h3>
+
+    <p id="studentStatus">
+      확인 중...
+    </p>
+
+    <p id="studentClub"></p>
+
+  </div>
+
+
+  <button class="secondary" id="stopBtn">
+    스캔 종료
+  </button>
+
+  <button class="secondary" id="logoutBtn">
+    로그아웃
+  </button>
+
+
+  <p class="smallText">
+    현재는 QR 조회 테스트 단계입니다.
+    실제 입·퇴장 기록은 아직 저장하지 않습니다.
+  </p>
+
 </div>
 
+
 <script type="module">
+
+// Firebase 연결
+
 import { initializeApp }
   from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
 
@@ -118,6 +252,9 @@ import {
   onSnapshot
 } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
 
+
+// Firebase 프로젝트 설정
+
 const firebaseConfig = {
   apiKey: "AIzaSyC2VNRvtLdE6DZQjVo3MSdyDigU8s99rI0",
   authDomain: "festival-booth-manager-da0de.firebaseapp.com",
@@ -128,33 +265,45 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
 const auth = getAuth(app);
 const db = getFirestore(app);
 
 const el = id => document.getElementById(id);
 
+
+// 상태 관리
+
 let scanner = null;
 let running = false;
 let busy = false;
+let processingQr = false;
 let authorizedClub = null;
-
 let unsubscribeCount = null;
 
+
+// 실시간 부스 인원 조회
+
 function watchBoothCount(clubId) {
-  // 기존 연결이 있으면 해제
+
   if (unsubscribeCount) {
     unsubscribeCount();
     unsubscribeCount = null;
   }
 
   el("currentCount").textContent = "-";
-  el("countStatus").textContent = "인원 정보 불러오는 중...";
+
+  el("countStatus").textContent =
+    "인원 정보 불러오는 중...";
 
   const boothRef = doc(db, "booths", clubId);
 
   unsubscribeCount = onSnapshot(
+
     boothRef,
+
     snapshot => {
+
       if (!snapshot.exists()) {
         el("countStatus").textContent =
           "부스 데이터를 찾을 수 없습니다.";
@@ -164,143 +313,403 @@ function watchBoothCount(clubId) {
       const count = snapshot.data().currentCount;
 
       el("currentCount").textContent = count;
+
       el("countStatus").textContent =
         "실시간 연결 중";
+
     },
+
     error => {
+
       console.error(error);
+
       el("countStatus").textContent =
         "인원 조회 오류: " + error.message;
+
     }
   );
 }
 
+
+// 관리자 권한 확인
+
 async function checkAccess(user) {
-  const snap = await getDoc(doc(db, "admins", user.uid));
+
+  const snap = await getDoc(
+    doc(db, "admins", user.uid)
+  );
+
   if (!snap.exists()) {
     throw new Error("관리자 권한 정보가 없습니다.");
   }
+
   const clubId = snap.data().clubId;
+
   if (clubId !== "club01") {
     throw new Error("NBRC 관리자 권한이 없습니다.");
   }
+
   return clubId;
 }
 
+
+// 관리자 페이지 표시
+
 async function showAuthorizedPage(user) {
+
   authorizedClub = await checkAccess(user);
+
   el("loginPage").hidden = true;
   el("managerPage").hidden = false;
-  el("managerTitle").textContent = "NBRC 관리자 페이지";
+
+  el("managerTitle").textContent =
+    "NBRC 관리자 페이지";
+
   watchBoothCount(authorizedClub);
 }
 
+
+// 로그인 버튼
+
 el("loginBtn").addEventListener("click", async () => {
+
   const email = el("email").value.trim();
   const password = el("adminCode").value;
   const selectedClub = el("club").value;
 
-  el("loginMessage").textContent = "로그인 확인 중...";
+  el("loginMessage").textContent =
+    "로그인 확인 중...";
 
   try {
+
     if (!email || !password) {
-      throw new Error("이메일과 관리자 코드를 입력해 주세요.");
+      throw new Error(
+        "이메일과 관리자 코드를 입력해 주세요."
+      );
     }
 
-    const credential = await signInWithEmailAndPassword(
-      auth, email, password
-    );
+    const credential =
+      await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
 
-    const clubId = await checkAccess(credential.user);
+    const clubId =
+      await checkAccess(credential.user);
 
     if (clubId !== selectedClub) {
-      throw new Error("선택한 동아리와 관리자 계정이 다릅니다.");
+      throw new Error(
+        "선택한 동아리와 관리자 계정이 다릅니다."
+      );
     }
 
     await showAuthorizedPage(credential.user);
+
     el("loginMessage").textContent = "";
     el("adminCode").value = "";
+
   } catch (error) {
+
     await signOut(auth);
+
     el("loginMessage").textContent =
       "로그인 실패: " + error.message;
+
   }
+
 });
 
-onAuthStateChanged(auth, async user => {
-  if (!user) {
-  if (unsubscribeCount) {
-    unsubscribeCount();
-    unsubscribeCount = null;
-  }
 
-  authorizedClub = null;
+// 로그인 유지 및 자동 로그인
+
+onAuthStateChanged(auth, async user => {
+
+  if (!user) {
+
+    if (unsubscribeCount) {
+      unsubscribeCount();
+      unsubscribeCount = null;
+    }
+
+    authorizedClub = null;
+
     el("loginPage").hidden = false;
     el("managerPage").hidden = true;
+
     return;
   }
 
   try {
+
     await showAuthorizedPage(user);
+
   } catch (error) {
+
     await signOut(auth);
-    el("loginMessage").textContent = error.message;
+
+    el("loginMessage").textContent =
+      error.message;
+
   }
+
 });
 
-async function startScan() {
-  if (running || busy || authorizedClub !== "club01") return;
-  busy = true;
+
+// 학생 QR을 Firebase에서 조회
+
+async function checkStudentQr(decodedText) {
+
+  const studentStatus = el("studentStatus");
+  const studentClub = el("studentClub");
+
+  const token = String(decodedText || "").trim();
+
+  studentStatus.textContent =
+    "학생 정보 확인 중...";
+
+  studentClub.textContent = "";
+
+
+  // QR 식별값 형식 확인 (64자리 16진수)
+
+  if (!/^[a-f0-9]{64}$/i.test(token)) {
+
+    studentStatus.textContent =
+      "올바른 학생 QR 형식이 아닙니다.";
+
+    return;
+  }
+
 
   try {
-    if (!scanner) scanner = new Html5Qrcode("reader");
+
+    const studentRef = doc(
+      db,
+      "students",
+      token
+    );
+
+    const snapshot = await getDoc(studentRef);
+
+
+    // Firebase에 등록되지 않은 학생
+
+    if (!snapshot.exists()) {
+
+      studentStatus.textContent =
+        "Firebase에 등록되지 않은 QR입니다.";
+
+      return;
+    }
+
+
+    // 현재 입장 중인 동아리 확인
+
+    const currentClubId =
+      snapshot.data().currentClubId || "";
+
+
+    studentStatus.textContent =
+      "등록된 학생 QR입니다!";
+
+
+    if (currentClubId === "") {
+
+      studentClub.textContent =
+        "현재 상태: 미입장";
+
+    } else if (currentClubId === "club01") {
+
+      studentClub.textContent =
+        "현재 상태: NBRC 입장 중";
+
+    } else {
+
+      studentClub.textContent =
+        "현재 상태: 다른 부스 입장 중 (" +
+        currentClubId + ")";
+
+    }
+
+  } catch (error) {
+
+    console.error("학생 조회 오류:", error);
+
+    studentStatus.textContent =
+      "학생 조회 실패";
+
+    if (error.code === "permission-denied") {
+
+      studentClub.textContent =
+        "Firestore 보안 규칙에서 students 조회 권한을 확인해 주세요.";
+
+    } else {
+
+      studentClub.textContent =
+        error.message;
+
+    }
+
+  }
+
+}
+
+
+// QR 스캐너 시작
+
+async function startScan() {
+
+  if (
+    running ||
+    busy ||
+    processingQr ||
+    authorizedClub !== "club01"
+  ) {
+    return;
+  }
+
+  busy = true;
+
+  el("result").hidden = true;
+
+  try {
+
+    if (!scanner) {
+      scanner = new Html5Qrcode("reader");
+    }
 
     await scanner.start(
+
       { facingMode: "environment" },
-      { fps: 10, qrbox: { width: 220, height: 220 } },
+
+      {
+        fps: 10,
+        qrbox: {
+          width: 220,
+          height: 220
+        }
+      },
+
+
+      // QR 인식 성공 시 실행
+
       async decodedText => {
-        if (busy) return;
-        busy = true;
+
+        if (processingQr) return;
+
+        processingQr = true;
 
         el("result").hidden = false;
-        el("studentStatus").textContent = "학생 정보 확인 중...";
+
+        el("studentStatus").textContent =
+          "학생 정보 확인 중...";
+
         el("studentClub").textContent = "";
-        el("status").textContent = "QR 확인 중";
 
-        await stopScan();
-        await checkStudentQr(decodedText);
+        el("status").textContent =
+          "QR 확인 중...";
 
-        el("status").textContent = "QR 확인 완료";
-        busy = false;
+        try {
+
+          await stopScan();
+
+          await checkStudentQr(decodedText);
+
+          el("status").textContent =
+            "QR 확인 완료";
+
+        } catch (error) {
+
+          console.error(error);
+
+          el("studentStatus").textContent =
+            "QR 확인 중 오류가 발생했습니다.";
+
+          el("status").textContent =
+            "QR 확인 실패";
+
+        } finally {
+
+          processingQr = false;
+
+        }
+
       },
+
       () => {}
+
     );
 
     running = true;
-    el("status").textContent = "학생 QR을 비춰 주세요.";
+
+    el("status").textContent =
+      "학생 QR을 비춰 주세요.";
+
   } catch (error) {
-    el("status").textContent = "카메라 오류: " + error.message;
+
+    el("status").textContent =
+      "카메라 오류: " + error.message;
+
   } finally {
+
     busy = false;
+
   }
+
 }
+
+
+// QR 스캐너 종료
 
 async function stopScan() {
+
   if (scanner && running) {
+
     running = false;
-    try { await scanner.stop(); } catch (error) {
+
+    try {
+
+      await scanner.stop();
+
+    } catch (error) {
+
       console.error(error);
+
     }
+
   }
+
 }
 
-el("startBtn").addEventListener("click", startScan);
-el("stopBtn").addEventListener("click", stopScan);
 
-el("logoutBtn").addEventListener("click", async () => {
-  await stopScan();
-  await signOut(auth);
-});
+// 스캔 버튼 연결
+
+el("startBtn").addEventListener(
+  "click",
+  startScan
+);
+
+el("stopBtn").addEventListener(
+  "click",
+  stopScan
+);
+
+
+// 로그아웃
+
+el("logoutBtn").addEventListener(
+  "click",
+  async () => {
+
+    await stopScan();
+
+    await signOut(auth);
+
+  }
+);
+
 </script>
+
 </body>
 </html>
