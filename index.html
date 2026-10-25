@@ -259,10 +259,19 @@ async function startScan() {
       { facingMode: "environment" },
       { fps: 10, qrbox: { width: 220, height: 220 } },
       async decodedText => {
-        el("qrValue").textContent = decodedText;
+        if (busy) return;
+        busy = true;
+
         el("result").hidden = false;
-        el("status").textContent = "QR 인식 성공";
+        el("studentStatus").textContent = "학생 정보 확인 중...";
+        el("studentClub").textContent = "";
+        el("status").textContent = "QR 확인 중";
+
         await stopScan();
+        await checkStudentQr(decodedText);
+
+        el("status").textContent = "QR 확인 완료";
+        busy = false;
       },
       () => {}
     );
