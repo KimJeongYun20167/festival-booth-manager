@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1">
+
+<title>2026 동아리 발표회 QR 스캐너</title>
+
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 20px;
+    background: #f4f6fb;
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+
+  .card {
+    max-width: 450px;
+    margin: 25px auto;
+    padding: 22px;
+    border-radius: 16px;
+    background: white;
+  }
+
+  h1 { font-size: 21px; }
+
+  #reader {
+    width: 100%;
+    margin: 20px auto;
+  }
+
+  button {
+    width: 100%;
+    padding: 15px;
+    margin: 8px 0;
+    border: 0;
+    border-radius: 10px;
+    background: #3858d6;
+    color: white;
+    font-size: 16px;
+  }
+
+  .secondary {
+    background: #e8ebf4;
+    color: #333;
+  }
+
+  #status {
+    line-height: 1.7;
+    font-size: 15px;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <h1>학생 QR 스캐너</h1>
+
+  <p>학생의 QR 코드를 카메라에 비춰 주세요.</p>
+
+  <button id="startBtn">
+    카메라 시작
+  </button>
+
+  <div id="reader"></div>
+
+  <p id="status">스캔 대기 중</p>
+
+  <button id="stopBtn" class="secondary">
+    스캔 종료
+  </button>
+
+</div>
+
+<script>
+const el = id => document.getElementById(id);
+
+const params = new URLSearchParams(
+  window.location.search
+);
+
+const returnOrigin = params.get("returnOrigin");
+const nonce = params.get("nonce");
+
+// Apps Script에서 열린 스캐너 창인지 검사
+const allowedOrigin =
+  /^https:\/\/[a-z0-9-]+\.googleusercontent\.com$/.test(
+    returnOrigin || ""
+  ) ||
+  returnOrigin === "https://script.google.com";
+
+const validNonce = /^[a-f0-9]{32}$/.test(
+  nonce || ""
+);
+
+let scanner = null;
+let running = false;
+let completed = false;
+
+async function startScan() {
+
+  if (!allowedOrigin || !validNonce || !window.opener) {
+    el("status").textContent =
+      "관리자 페이지에서 QR 스캐너를 열어 주세요.";
+    return;
+  }
+
+  if (running || completed) return;
+
+  try {
+
+    if (!scanner) {
+      scanner = new Html5Qrcode("reader");
+    }
+
+    await scanner.start(
+      { facingMode: "environment" },
+      {
+        fps: 10,
+        qrbox: {
+          width: 220,
+          height: 220
+        }
+      },
+
+      async decodedText => {
+
+        if (completed) return;
+        completed = true;
+
+        el("status").textContent =
+          "QR 인식 완료. 관리자 페이지로 전달 중...";
+
+        await stopScan();
+
+        // QR은 주소창이나 서버 로그에 넣지 않음
+        window.opener.postMessage(
+          {
+            type: "festival-student-qr",
+            nonce: nonce,
+            token: String(decodedText).trim()
+          },
+          returnOrigin
+        );
+
+        el("status").textContent =
+          "전달 완료! 관리자 페이지로 돌아가 주세요.";
+
+        setTimeout(() => {
+          window.close();
+        }, 700);
+
+      },
+
+      () => {}
+    );
+
+    running = true;
+
+    el("status").textContent =
+      "카메라를 QR 코드에 비춰 주세요.";
+
+  } catch (error) {
+
+    completed = false;
+
+    el("status").textContent =
+      "카메라 시작 실패: " + error.message;
+
+  }
+}
+
+async function stopScan() {
+
+  if (scanner && running) {
+
+    try {
+      await scanner.stop();
+    } catch (error) {
+      console.error(error);
+    }
+
+    running = false;
+  }
+}
+
+el("startBtn").addEventListener(
+  "click", startScan
+);
+
+el("stopBtn").addEventListener(
+  "click", stopScan
+);
+
+</script>
+</body>
+</html>
