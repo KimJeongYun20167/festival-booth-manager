@@ -5,57 +5,68 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>2026 동아리 축제 관리자</title>
+<title>2026 대전노은고등학교 동아리 발표회 관리자</title>
 
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
-  font-family: Arial, sans-serif;
-  background: #f4f6fb;
-  text-align: center;
-  padding: 20px;
   margin: 0;
+  padding: 18px;
+  background: #f4f6fb;
+  font-family: Arial, sans-serif;
+  color: #222;
+  text-align: center;
 }
 
 .card {
-  max-width: 430px;
-  margin: 24px auto;
+  max-width: 450px;
+  margin: 22px auto;
   padding: 24px;
   background: white;
   border-radius: 16px;
 }
 
-[hidden] {
-  display: none !important;
+h1 {
+  font-size: 23px;
+  line-height: 1.5;
+}
+
+h2 {
+  font-size: 21px;
+}
+
+label {
+  display: block;
+  margin: 16px 0 7px;
+  font-weight: bold;
+  text-align: left;
 }
 
 input, select, button {
   width: 100%;
   padding: 14px;
-  margin: 8px 0;
-  font-size: 16px;
+  margin: 7px 0;
   border-radius: 10px;
+  font-size: 16px;
 }
 
 input, select {
   border: 1px solid #ccc;
+  background: white;
 }
 
 button {
-  border: none;
   background: #3858d6;
   color: white;
+  border: none;
   cursor: pointer;
 }
 
 button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+  opacity: .55;
 }
 
 .secondary {
@@ -63,123 +74,125 @@ button:disabled {
   color: #333;
 }
 
+.box {
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 12px;
+  background: #f4f6fb;
+}
+
+.count {
+  font-size: 44px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.small {
+  color: #777;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.error {
+  color: #b42318;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
 #reader {
   width: 100%;
   margin: 15px 0;
 }
 
-#loginMessage {
-  color: #b42318;
-}
-
-.countBox {
-  background: #f4f6fb;
-  padding: 20px;
-  border-radius: 12px;
-  margin: 20px 0;
-}
-
-.countNumber {
-  font-size: 40px;
-  font-weight: bold;
-  margin: 10px 0;
-}
-
-.smallText {
-  font-size: 13px;
-  color: #777;
-}
-
-.resultBox {
+#studentResult {
   background: #eef5ff;
-  padding: 16px;
-  margin: 16px 0;
   border-radius: 12px;
+  padding: 16px;
+  margin: 15px 0;
 }
 
-#studentStatus {
-  font-size: 18px;
-  font-weight: bold;
+[hidden] {
+  display: none !important;
 }
-
-#studentClub {
-  line-height: 1.6;
-}
-
 </style>
 </head>
 
 <body>
 
-<!-- 관리자 로그인 화면 -->
+<!-- 관리자 로그인 -->
 
 <div class="card" id="loginPage">
 
-  <h2>2026 동아리 축제</h2>
-  <h3>관리자 로그인</h3>
+  <h1>
+    2026 대전노은고등학교<br>
+    동아리 발표회
+  </h1>
+
+  <h2>부스 관리자</h2>
 
   <label for="club">동아리 선택</label>
+  <select id="club"></select>
 
-  <select id="club">
-    <option value="club01">NBRC</option>
-  </select>
-
-  <p class="smallText">
-    현재는 NBRC 테스트 단계입니다.
-  </p>
-
+  <label for="email">관리자 이메일</label>
   <input
     id="email"
     type="email"
-    placeholder="등록한 관리자 이메일"
+    placeholder="등록된 관리자 이메일"
     autocomplete="username"
   >
 
+  <label for="adminCode">관리자 코드</label>
   <input
     id="adminCode"
     type="password"
-    placeholder="관리자 코드"
+    placeholder="관리자 코드 입력"
     autocomplete="current-password"
   >
 
   <button id="loginBtn">
-    관리자 로그인
+    로그인
   </button>
 
-  <p id="loginMessage"></p>
+  <p id="loginMessage" class="error"></p>
+
+  <p class="small">
+    현재 Firebase에 등록된 관리자 계정만
+    로그인할 수 있습니다.
+  </p>
 
 </div>
 
 
-<!-- 관리자 메인 화면 -->
+<!-- 관리자 페이지 -->
 
 <div class="card" id="managerPage" hidden>
 
   <h2 id="managerTitle">
-    관리자 페이지
+    동아리 관리자
   </h2>
 
-  <p>로그인 및 동아리 권한 확인 완료</p>
+  <p class="small">
+    관리자 인증 완료
+  </p>
 
+  <!-- 현재 부스 인원 -->
 
-  <!-- 현재 인원 표시 -->
-
-  <div class="countBox">
+  <div class="box">
 
     <h3>현재 부스 인원</h3>
 
-    <p class="countNumber">
+    <p class="count">
       <span id="currentCount">-</span>명
     </p>
 
-    <p id="countStatus" class="smallText">
+    <p id="countStatus" class="small">
       인원 정보 불러오는 중...
     </p>
 
   </div>
 
 
-  <!-- QR 스캐너 -->
+  <!-- 학생 QR -->
 
   <h3>학생 QR 스캐너</h3>
 
@@ -189,51 +202,41 @@ button:disabled {
 
   <div id="reader"></div>
 
-  <p id="status">
+  <p id="scanStatus">
     스캔 대기 중
   </p>
 
 
-  <!-- 학생 조회 결과 -->
+  <!-- QR 조회 결과 -->
 
-  <div
-    id="result"
-    class="resultBox"
-    hidden
-    aria-live="polite"
-  >
+  <div id="studentResult" hidden>
 
     <h3>학생 QR 확인 결과</h3>
 
-    <p id="studentStatus">
-      확인 중...
-    </p>
+    <p id="studentStatus"></p>
 
     <p id="studentClub"></p>
 
   </div>
 
 
-  <button class="secondary" id="stopBtn">
+  <button id="stopBtn" class="secondary">
     스캔 종료
   </button>
 
-  <button class="secondary" id="logoutBtn">
+  <button id="logoutBtn" class="secondary">
     로그아웃
   </button>
 
-
-  <p class="smallText">
-    현재는 QR 조회 테스트 단계입니다.
-    실제 입·퇴장 기록은 아직 저장하지 않습니다.
+  <p class="small">
+    현재 버전은 QR 확인 및 실시간 인원 조회용입니다.
+    실제 입·퇴장 기록은 아직 변경하지 않습니다.
   </p>
 
 </div>
 
 
 <script type="module">
-
-// Firebase 연결
 
 import { initializeApp }
   from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
@@ -253,7 +256,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
 
 
-// Firebase 프로젝트 설정
+// Firebase 설정
 
 const firebaseConfig = {
   apiKey: "AIzaSyC2VNRvtLdE6DZQjVo3MSdyDigU8s99rI0",
@@ -265,24 +268,104 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-
 const auth = getAuth(app);
 const db = getFirestore(app);
 
 const el = id => document.getElementById(id);
 
 
-// 상태 관리
+// 공식 동아리 26개
 
-let scanner = null;
-let running = false;
-let busy = false;
-let processingQr = false;
+const CLUB_NAMES = [
+
+  "Chem Is Try",
+  "Clavis",
+  "D.P.",
+  "E.P.C.",
+  "INNOBIZ",
+  "IVECA",
+  "L.I.G.",
+  "Mechanic",
+  "M.V.P",
+  "NBRC",
+  "NEBS",
+  "Nurse I Am",
+  "Polaris",
+  "S.I.S.",
+  "T.L.",
+  "뉴턴",
+  "디오니소스",
+  "미토피아",
+  "심장",
+  "온본디",
+  "이슈있슈",
+  "인문이문",
+  "일본문화탐구동아리",
+  "창공",
+  "축구부",
+  "크레센도"
+
+];
+
+const CLUBS = CLUB_NAMES.map((name, index) => ({
+  id: "club" + String(index + 1).padStart(2, "0"),
+  name: name
+}));
+
+const clubMap = new Map(
+  CLUBS.map(club => [club.id, club.name])
+);
+
+
+// 동아리 선택 목록
+
+CLUBS.forEach(club => {
+
+  const option = document.createElement("option");
+
+  option.value = club.id;
+  option.textContent = club.name;
+
+  el("club").appendChild(option);
+
+});
+
+
+// 현재 상태
+
 let authorizedClub = null;
 let unsubscribeCount = null;
 
+let scanner = null;
+let running = false;
+let starting = false;
+let processingQr = false;
 
-// 실시간 부스 인원 조회
+
+// 관리자 권한 확인
+
+async function checkAccess(user) {
+
+  const snapshot = await getDoc(
+    doc(db, "admins", user.uid)
+  );
+
+  if (!snapshot.exists()) {
+    throw new Error("관리자 권한 정보가 없습니다.");
+  }
+
+  const clubId = snapshot.data().clubId;
+
+  if (!clubMap.has(clubId)) {
+    throw new Error("등록되지 않은 동아리 권한입니다.");
+  }
+
+  return clubId;
+
+}
+
+
+// 부스 인원 실시간 조회
 
 function watchBoothCount(clubId) {
 
@@ -292,27 +375,24 @@ function watchBoothCount(clubId) {
   }
 
   el("currentCount").textContent = "-";
-
-  el("countStatus").textContent =
-    "인원 정보 불러오는 중...";
-
-  const boothRef = doc(db, "booths", clubId);
+  el("countStatus").textContent = "인원 조회 중...";
 
   unsubscribeCount = onSnapshot(
 
-    boothRef,
+    doc(db, "booths", clubId),
 
     snapshot => {
 
       if (!snapshot.exists()) {
         el("countStatus").textContent =
-          "부스 데이터를 찾을 수 없습니다.";
+          "부스 데이터가 없습니다.";
         return;
       }
 
-      const count = snapshot.data().currentCount;
+      const data = snapshot.data();
 
-      el("currentCount").textContent = count;
+      el("currentCount").textContent =
+        data.currentCount ?? 0;
 
       el("countStatus").textContent =
         "실시간 연결 중";
@@ -324,89 +404,76 @@ function watchBoothCount(clubId) {
       console.error(error);
 
       el("countStatus").textContent =
-        "인원 조회 오류: " + error.message;
+        "조회 오류: " + error.message;
 
     }
+
   );
+
 }
 
 
-// 관리자 권한 확인
+// 관리자 화면 표시
 
-async function checkAccess(user) {
+async function showManager(user) {
 
-  const snap = await getDoc(
-    doc(db, "admins", user.uid)
-  );
+  const clubId = await checkAccess(user);
 
-  if (!snap.exists()) {
-    throw new Error("관리자 권한 정보가 없습니다.");
-  }
+  authorizedClub = clubId;
 
-  const clubId = snap.data().clubId;
+  el("club").value = clubId;
 
-  if (clubId !== "club01") {
-    throw new Error("NBRC 관리자 권한이 없습니다.");
-  }
-
-  return clubId;
-}
-
-
-// 관리자 페이지 표시
-
-async function showAuthorizedPage(user) {
-
-  authorizedClub = await checkAccess(user);
+  el("managerTitle").textContent =
+    clubMap.get(clubId) + " 관리자";
 
   el("loginPage").hidden = true;
   el("managerPage").hidden = false;
 
-  el("managerTitle").textContent =
-    "NBRC 관리자 페이지";
+  watchBoothCount(clubId);
 
-  watchBoothCount(authorizedClub);
 }
 
 
-// 로그인 버튼
+// 로그인
 
 el("loginBtn").addEventListener("click", async () => {
 
+  const selectedClub = el("club").value;
   const email = el("email").value.trim();
   const password = el("adminCode").value;
-  const selectedClub = el("club").value;
 
-  el("loginMessage").textContent =
-    "로그인 확인 중...";
+  el("loginMessage").textContent = "";
+
+  if (!email || !password) {
+
+    el("loginMessage").textContent =
+      "이메일과 관리자 코드를 입력해 주세요.";
+
+    return;
+  }
+
+  el("loginBtn").disabled = true;
 
   try {
 
-    if (!email || !password) {
-      throw new Error(
-        "이메일과 관리자 코드를 입력해 주세요."
-      );
-    }
-
     const credential =
       await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
+        auth, email, password
       );
 
     const clubId =
       await checkAccess(credential.user);
 
     if (clubId !== selectedClub) {
+
       throw new Error(
-        "선택한 동아리와 관리자 계정이 다릅니다."
+        "선택한 동아리와 관리자 계정이 일치하지 않습니다."
       );
+
     }
 
-    await showAuthorizedPage(credential.user);
+    await showManager(credential.user);
 
-    el("loginMessage").textContent = "";
     el("adminCode").value = "";
 
   } catch (error) {
@@ -416,23 +483,29 @@ el("loginBtn").addEventListener("click", async () => {
     el("loginMessage").textContent =
       "로그인 실패: " + error.message;
 
+  } finally {
+
+    el("loginBtn").disabled = false;
+
   }
 
 });
 
 
-// 로그인 유지 및 자동 로그인
+// 로그인 상태 유지
 
 onAuthStateChanged(auth, async user => {
 
   if (!user) {
+
+    authorizedClub = null;
 
     if (unsubscribeCount) {
       unsubscribeCount();
       unsubscribeCount = null;
     }
 
-    authorizedClub = null;
+    await stopScan();
 
     el("loginPage").hidden = false;
     el("managerPage").hidden = true;
@@ -442,7 +515,7 @@ onAuthStateChanged(auth, async user => {
 
   try {
 
-    await showAuthorizedPage(user);
+    await showManager(user);
 
   } catch (error) {
 
@@ -456,122 +529,94 @@ onAuthStateChanged(auth, async user => {
 });
 
 
-// 학생 QR을 Firebase에서 조회
+// 학생 QR 조회
 
 async function checkStudentQr(decodedText) {
 
-  const studentStatus = el("studentStatus");
-  const studentClub = el("studentClub");
-
   const token = String(decodedText || "").trim();
 
-  studentStatus.textContent =
+  el("studentStatus").textContent =
     "학생 정보 확인 중...";
 
-  studentClub.textContent = "";
-
-
-  // QR 식별값 형식 확인 (64자리 16진수)
+  el("studentClub").textContent = "";
 
   if (!/^[a-f0-9]{64}$/i.test(token)) {
 
-    studentStatus.textContent =
-      "올바른 학생 QR 형식이 아닙니다.";
+    el("studentStatus").textContent =
+      "올바른 QR 형식이 아닙니다.";
 
     return;
   }
 
-
   try {
 
-    const studentRef = doc(
-      db,
-      "students",
-      token
+    const snapshot = await getDoc(
+      doc(db, "students", token)
     );
-
-    const snapshot = await getDoc(studentRef);
-
-
-    // Firebase에 등록되지 않은 학생
 
     if (!snapshot.exists()) {
 
-      studentStatus.textContent =
-        "Firebase에 등록되지 않은 QR입니다.";
+      el("studentStatus").textContent =
+        "등록되지 않은 QR입니다.";
 
       return;
     }
 
-
-    // 현재 입장 중인 동아리 확인
-
     const currentClubId =
       snapshot.data().currentClubId || "";
 
-
-    studentStatus.textContent =
+    el("studentStatus").textContent =
       "등록된 학생 QR입니다!";
 
+    if (!currentClubId) {
 
-    if (currentClubId === "") {
-
-      studentClub.textContent =
+      el("studentClub").textContent =
         "현재 상태: 미입장";
 
-    } else if (currentClubId === "club01") {
+    } else if (currentClubId === authorizedClub) {
 
-      studentClub.textContent =
-        "현재 상태: NBRC 입장 중";
+      el("studentClub").textContent =
+        "현재 상태: 이 부스에 입장 중";
 
     } else {
 
-      studentClub.textContent =
-        "현재 상태: 다른 부스 입장 중 (" +
-        currentClubId + ")";
+      const name =
+        clubMap.get(currentClubId) || "다른 동아리";
+
+      el("studentClub").textContent =
+        "현재 상태: " + name + " 입장 중";
 
     }
 
   } catch (error) {
 
-    console.error("학생 조회 오류:", error);
+    console.error(error);
 
-    studentStatus.textContent =
+    el("studentStatus").textContent =
       "학생 조회 실패";
 
-    if (error.code === "permission-denied") {
-
-      studentClub.textContent =
-        "Firestore 보안 규칙에서 students 조회 권한을 확인해 주세요.";
-
-    } else {
-
-      studentClub.textContent =
-        error.message;
-
-    }
+    el("studentClub").textContent =
+      error.message;
 
   }
 
 }
 
 
-// QR 스캐너 시작
+// QR 스캔 시작
 
 async function startScan() {
 
   if (
     running ||
-    busy ||
+    starting ||
     processingQr ||
-    authorizedClub !== "club01"
-  ) {
-    return;
-  }
+    !authorizedClub
+  ) return;
 
-  busy = true;
+  starting = true;
 
-  el("result").hidden = true;
+  el("studentResult").hidden = true;
 
   try {
 
@@ -585,14 +630,8 @@ async function startScan() {
 
       {
         fps: 10,
-        qrbox: {
-          width: 220,
-          height: 220
-        }
+        qrbox: { width: 220, height: 220 }
       },
-
-
-      // QR 인식 성공 시 실행
 
       async decodedText => {
 
@@ -600,14 +639,9 @@ async function startScan() {
 
         processingQr = true;
 
-        el("result").hidden = false;
+        el("studentResult").hidden = false;
 
-        el("studentStatus").textContent =
-          "학생 정보 확인 중...";
-
-        el("studentClub").textContent = "";
-
-        el("status").textContent =
+        el("scanStatus").textContent =
           "QR 확인 중...";
 
         try {
@@ -616,17 +650,14 @@ async function startScan() {
 
           await checkStudentQr(decodedText);
 
-          el("status").textContent =
+          el("scanStatus").textContent =
             "QR 확인 완료";
 
         } catch (error) {
 
           console.error(error);
 
-          el("studentStatus").textContent =
-            "QR 확인 중 오류가 발생했습니다.";
-
-          el("status").textContent =
+          el("scanStatus").textContent =
             "QR 확인 실패";
 
         } finally {
@@ -643,24 +674,24 @@ async function startScan() {
 
     running = true;
 
-    el("status").textContent =
+    el("scanStatus").textContent =
       "학생 QR을 비춰 주세요.";
 
   } catch (error) {
 
-    el("status").textContent =
+    el("scanStatus").textContent =
       "카메라 오류: " + error.message;
 
   } finally {
 
-    busy = false;
+    starting = false;
 
   }
 
 }
 
 
-// QR 스캐너 종료
+// QR 스캔 중지
 
 async function stopScan() {
 
@@ -669,13 +700,9 @@ async function stopScan() {
     running = false;
 
     try {
-
       await scanner.stop();
-
     } catch (error) {
-
       console.error(error);
-
     }
 
   }
@@ -683,33 +710,25 @@ async function stopScan() {
 }
 
 
-// 스캔 버튼 연결
+// 버튼 연결
 
 el("startBtn").addEventListener(
-  "click",
-  startScan
+  "click", startScan
 );
 
 el("stopBtn").addEventListener(
-  "click",
-  stopScan
+  "click", stopScan
 );
 
-
-// 로그아웃
-
 el("logoutBtn").addEventListener(
-  "click",
-  async () => {
+  "click", async () => {
 
     await stopScan();
-
     await signOut(auth);
 
   }
 );
 
 </script>
-
 </body>
 </html>
