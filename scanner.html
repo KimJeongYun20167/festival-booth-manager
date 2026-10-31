@@ -2,205 +2,284 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1">
 
-<title>2026 동아리 발표회 QR 스캐너</title>
+  <title>2026 동아리 발표회 QR 스캐너</title>
 
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
-<style>
-  * { box-sizing: border-box; }
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-  body {
-    margin: 0;
-    padding: 20px;
-    background: #f4f6fb;
-    font-family: Arial, sans-serif;
-    text-align: center;
-  }
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f4f6fb;
+      color: #222;
+      text-align: center;
+    }
 
-  .card {
-    max-width: 450px;
-    margin: 25px auto;
-    padding: 22px;
-    border-radius: 16px;
-    background: white;
-  }
+    .card {
+      max-width: 440px;
+      margin: 24px auto;
+      padding: 24px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 18px #0000000b;
+    }
 
-  h1 { font-size: 21px; }
+    h1 {
+      font-size: 22px;
+      line-height: 1.5;
+    }
 
-  #reader {
-    width: 100%;
-    margin: 20px auto;
-  }
+    button {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      margin: 12px 0;
+      border: none;
+      border-radius: 10px;
+      background: #3858d6;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+    }
 
-  button {
-    width: 100%;
-    padding: 15px;
-    margin: 8px 0;
-    border: 0;
-    border-radius: 10px;
-    background: #3858d6;
-    color: white;
-    font-size: 16px;
-  }
+    button:disabled {
+      opacity: 0.5;
+    }
 
-  .secondary {
-    background: #e8ebf4;
-    color: #333;
-  }
+    .secondary {
+      background: #e8ebf4;
+      color: #333;
+    }
 
-  #status {
-    line-height: 1.7;
-    font-size: 15px;
-  }
-</style>
+    #reader {
+      width: 100%;
+      margin: 20px auto;
+      overflow: hidden;
+    }
+
+    #result {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 10px;
+      background: #f4f6fb;
+      line-height: 1.7;
+      white-space: pre-line;
+      overflow-wrap: anywhere;
+    }
+
+    .success {
+      background: #e9f8ed !important;
+      color: #166534;
+    }
+
+    .error {
+      background: #fef0ef !important;
+      color: #b42318;
+    }
+
+    .small {
+      font-size: 13px;
+      color: #777;
+      line-height: 1.6;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+  </style>
 </head>
 
 <body>
 
 <div class="card">
 
-  <h1>학생 QR 스캐너</h1>
+  <h1>
+    2026 대전노은고등학교<br>
+    동아리 발표회
+  </h1>
 
-  <p>학생의 QR 코드를 카메라에 비춰 주세요.</p>
+  <h2>학생 QR 스캐너</h2>
+
+  <p class="small">
+    카메라를 켜고 QR 코드를 비춰 주세요.
+  </p>
 
   <button id="startBtn">
-    카메라 시작
+    카메라 켜기
+  </button>
+
+  <button
+    id="stopBtn"
+    class="secondary"
+    hidden
+  >
+    카메라 끄기
   </button>
 
   <div id="reader"></div>
 
-  <p id="status">스캔 대기 중</p>
+  <div id="result" aria-live="polite">
+    스캔 대기 중
+  </div>
 
-  <button id="stopBtn" class="secondary">
-    스캔 종료
-  </button>
+  <p class="small">
+    현재는 카메라와 QR 인식 기능만 점검합니다.
+    학생 정보 조회 및 입·퇴장은 처리하지 않습니다.
+  </p>
 
 </div>
 
 <script>
-const el = id => document.getElementById(id);
+  const startBtn =
+    document.getElementById("startBtn");
 
-const params = new URLSearchParams(
-  window.location.search
-);
+  const stopBtn =
+    document.getElementById("stopBtn");
 
-const returnOrigin = params.get("returnOrigin");
-const nonce = params.get("nonce");
+  const result =
+    document.getElementById("result");
 
-// Apps Script에서 열린 스캐너 창인지 검사
-const allowedOrigin =
-  /^https:\/\/[a-z0-9-]+\.googleusercontent\.com$/.test(
-    returnOrigin || ""
-  ) ||
-  returnOrigin === "https://script.google.com";
+  let scanner = null;
+  let starting = false;
+  let lastScanTime = 0;
 
-const validNonce = /^[a-f0-9]{32}$/.test(
-  nonce || ""
-);
-
-let scanner = null;
-let running = false;
-let completed = false;
-
-async function startScan() {
-
-  if (!allowedOrigin || !validNonce || !window.opener) {
-    el("status").textContent =
-      "관리자 페이지에서 QR 스캐너를 열어 주세요.";
-    return;
+  function showMessage(message, type = "") {
+    result.textContent = message;
+    result.className = type;
   }
 
-  if (running || completed) return;
+  async function startScanner() {
 
-  try {
+    if (scanner || starting) return;
 
-    if (!scanner) {
-      scanner = new Html5Qrcode("reader");
+    if (typeof Html5Qrcode === "undefined") {
+      showMessage(
+        "QR 라이브러리를 불러오지 못했습니다.",
+        "error"
+      );
+      return;
     }
 
-    await scanner.start(
-      { facingMode: "environment" },
-      {
-        fps: 10,
-        qrbox: {
-          width: 220,
-          height: 220
-        }
-      },
+    starting = true;
+    startBtn.disabled = true;
 
-      async decodedText => {
-
-        if (completed) return;
-        completed = true;
-
-        el("status").textContent =
-          "QR 인식 완료. 관리자 페이지로 전달 중...";
-
-        await stopScan();
-
-        // QR은 주소창이나 서버 로그에 넣지 않음
-        window.opener.postMessage(
-          {
-            type: "festival-student-qr",
-            nonce: nonce,
-            token: String(decodedText).trim()
-          },
-          returnOrigin
-        );
-
-        el("status").textContent =
-          "전달 완료! 관리자 페이지로 돌아가 주세요.";
-
-        setTimeout(() => {
-          window.close();
-        }, 700);
-
-      },
-
-      () => {}
-    );
-
-    running = true;
-
-    el("status").textContent =
-      "카메라를 QR 코드에 비춰 주세요.";
-
-  } catch (error) {
-
-    completed = false;
-
-    el("status").textContent =
-      "카메라 시작 실패: " + error.message;
-
-  }
-}
-
-async function stopScan() {
-
-  if (scanner && running) {
+    const instance = new Html5Qrcode("reader");
+    scanner = instance;
 
     try {
-      await scanner.stop();
+
+      await instance.start(
+        { facingMode: "environment" },
+        {
+          fps: 10,
+          qrbox: {
+            width: 220,
+            height: 220
+          }
+        },
+        onScanSuccess,
+        () => {}
+      );
+
+      startBtn.hidden = true;
+      stopBtn.hidden = false;
+
+      showMessage(
+        "카메라 실행 완료!\nQR 코드를 비춰 주세요."
+      );
+
+    } catch (error) {
+
+      scanner = null;
+
+      showMessage(
+        "카메라 실행 실패: " +
+        (error.message || String(error)),
+        "error"
+      );
+
+      try {
+        instance.clear();
+      } catch (e) {
+        console.error(e);
+      }
+
+    } finally {
+      starting = false;
+      startBtn.disabled = false;
+    }
+  }
+
+  async function stopScanner() {
+
+    if (!scanner) return;
+
+    const instance = scanner;
+    scanner = null;
+
+    try {
+
+      if (instance.isScanning) {
+        await instance.stop();
+      }
+
+      instance.clear();
+
     } catch (error) {
       console.error(error);
     }
 
-    running = false;
+    startBtn.hidden = false;
+    stopBtn.hidden = true;
   }
-}
 
-el("startBtn").addEventListener(
-  "click", startScan
-);
+  function onScanSuccess(decodedText) {
 
-el("stopBtn").addEventListener(
-  "click", stopScan
-);
+    const now = Date.now();
 
+    if (now - lastScanTime < 3000) {
+      return;
+    }
+
+    lastScanTime = now;
+
+    // QR식별값은 화면에 표시하거나 저장하지 않음
+    if (/^[a-fA-F0-9]{64}$/.test(decodedText.trim())) {
+
+      showMessage(
+        "✓ QR 인식 성공!\n64자리 학생 QR 형식 확인 완료\n\n아직 Firebase 조회나 입·퇴장은 처리하지 않았습니다.",
+        "success"
+      );
+
+    } else {
+
+      showMessage(
+        "QR은 인식했지만 학생 QR 형식이 아닙니다.",
+        "error"
+      );
+
+    }
+  }
+
+  startBtn.addEventListener(
+    "click",
+    startScanner
+  );
+
+  stopBtn.addEventListener(
+    "click",
+    stopScanner
+  );
 </script>
+
 </body>
 </html>
