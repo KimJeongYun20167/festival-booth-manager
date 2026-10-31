@@ -3,8 +3,9 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1">
 
   <title>2026 동아리 발표회 QR 스캐너</title>
 
@@ -110,7 +111,7 @@
   <h2>학생 QR 스캐너</h2>
 
   <p class="small">
-    카메라를 켜고 QR 코드를 비춰 주세요.
+    카메라를 켜고 학생 QR을 비춰 주세요.
   </p>
 
   <button id="startBtn">
@@ -132,8 +133,9 @@
   </div>
 
   <p class="small">
-    현재는 카메라와 QR 인식 기능만 점검합니다.
-    학생 정보 조회 및 입·퇴장은 처리하지 않습니다.
+    QR 인식 결과를 관리자 페이지로 전달합니다.
+    <br>
+    이 페이지에서는 Firebase 데이터를 수정하지 않습니다.
   </p>
 
 </div>
@@ -148,24 +150,32 @@
   const result =
     document.getElementById("result");
 
+  const MANAGER_ORIGIN =
+    "https://script.google.com";
+
   let scanner = null;
   let starting = false;
   let lastScanTime = 0;
 
   function showMessage(message, type = "") {
+
     result.textContent = message;
     result.className = type;
   }
 
   async function startScanner() {
 
-    if (scanner || starting) return;
+    if (scanner || starting) {
+      return;
+    }
 
     if (typeof Html5Qrcode === "undefined") {
+
       showMessage(
-        "QR 라이브러리를 불러오지 못했습니다.",
+        "QR 스캐너 라이브러리를 불러오지 못했습니다.",
         "error"
       );
+
       return;
     }
 
@@ -194,7 +204,7 @@
       stopBtn.hidden = false;
 
       showMessage(
-        "카메라 실행 완료!\nQR 코드를 비춰 주세요."
+        "카메라 실행 완료!\n학생 QR을 비춰 주세요."
       );
 
     } catch (error) {
@@ -214,8 +224,10 @@
       }
 
     } finally {
+
       starting = false;
       startBtn.disabled = false;
+
     }
   }
 
@@ -252,22 +264,42 @@
 
     lastScanTime = now;
 
-    // QR식별값은 화면에 표시하거나 저장하지 않음
-    if (/^[a-fA-F0-9]{64}$/.test(decodedText.trim())) {
+    const token = String(decodedText).trim();
+
+    if (!/^[a-fA-F0-9]{64}$/.test(token)) {
 
       showMessage(
-        "✓ QR 인식 성공!\n64자리 학생 QR 형식 확인 완료\n\n아직 Firebase 조회나 입·퇴장은 처리하지 않았습니다.",
-        "success"
-      );
-
-    } else {
-
-      showMessage(
-        "QR은 인식했지만 학생 QR 형식이 아닙니다.",
+        "학생 QR 형식이 아닙니다.",
         "error"
       );
 
+      return;
     }
+
+    if (!window.opener || window.opener.closed) {
+
+      showMessage(
+        "관리자 페이지와 연결되지 않았습니다.\n" +
+        "관리자 페이지에서 스캐너를 열어 주세요.",
+        "error"
+      );
+
+      return;
+    }
+
+    window.opener.postMessage(
+      {
+        type: "FESTIVAL_QR_SCANNED",
+        token: token
+      },
+      MANAGER_ORIGIN
+    );
+
+    showMessage(
+      "✓ QR 인식 완료!\n" +
+      "관리자 페이지로 검증 요청을 전달했습니다.",
+      "success"
+    );
   }
 
   startBtn.addEventListener(
