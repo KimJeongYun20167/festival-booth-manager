@@ -1,0 +1,333 @@
+
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026 동아리 발표회 · 학생 QR</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:20px;background:#f4f6fb;font-family:system-ui,-apple-system,sans-serif;color:#1f2937}
+.card{max-width:440px;margin:32px auto;background:#fff;border-radius:20px;padding:26px;box-shadow:0 6px 25px #0000000b}
+h1{text-align:center;font-size:23px;line-height:1.45}
+h2{text-align:center;font-size:18px}
+p{line-height:1.6}
+label{font-weight:700;display:block;margin:20px 0 8px}
+input,button{width:100%;font-size:17px;padding:15px;border-radius:12px}
+input{border:1px solid #cbd5e1}
+button{border:0;background:#3858d6;color:white;font-weight:700;margin-top:18px}
+button:disabled{opacity:.5}
+.secondary{background:#e8ebf4;color:#333}
+.hint{font-size:13px;color:#64748b;text-align:center}
+.message{border-radius:12px;padding:14px;background:#eef2ff;line-height:1.5;white-space:pre-line;margin-top:14px;overflow-wrap:anywhere}
+.error{background:#fff1f2;color:#b42318}
+.ok{background:#eaf8ed;color:#166534}
+#qr{display:flex;justify-content:center;margin:22px auto;min-height:260px}
+#qr img,#qr canvas{max-width:100%}
+[hidden]{display:none!important}
+</style>
+</head>
+
+<body>
+
+<section class="card" id="loginPanel">
+  <h1>
+    2026 대전노은고등학교<br>
+    동아리 발표회
+  </h1>
+
+  <h2>학생 QR 확인</h2>
+
+  <label for="studentId">
+    학번 (5자리)
+  </label>
+
+  <input
+    id="studentId"
+    inputmode="numeric"
+    maxlength="5"
+    placeholder="예: 12345"
+    autocomplete="off"
+  >
+
+  <label for="issuanceCode">
+    개인 발급코드 (8자리)
+  </label>
+
+  <input
+    id="issuanceCode"
+    type="password"
+    maxlength="8"
+    placeholder="발급받은 8자리 코드"
+    autocomplete="off"
+  >
+
+  <button id="loginButton">
+    내 QR코드 보기
+  </button>
+
+  <div id="loginMessage" class="message">
+    본인의 학번과 개인 발급코드를 입력하세요.
+  </div>
+
+  <p class="hint">
+    관리자코드가 아닌 학생 개인 발급코드를 입력하세요.
+  </p>
+</section>
+
+
+<section class="card" id="qrPanel" hidden>
+
+  <h1>나의 동아리 발표회 QR</h1>
+
+  <p style="text-align:center">
+    <strong id="studentLabel"></strong>
+  </p>
+
+  <div id="qr"></div>
+
+  <div class="message ok">
+    이 QR코드를 부스 관리자에게 보여주세요.
+  </div>
+
+  <p class="hint">
+    다른 학생에게 공유하거나 공개 게시하지 마세요.
+  </p>
+
+  <button id="backButton" class="secondary">
+    QR 닫기
+  </button>
+
+</section>
+
+
+<iframe
+  id="gatewayFrame"
+  name="festivalStudentGatewayFrame"
+  hidden
+  title="학생 인증 통신"
+></iframe>
+
+<script>
+const API_URL =
+  'https://script.google.com/macros/s/' +
+  'AKfycbzWKKP6y-6SotsccJUOiw-Ep7ybm-' +
+  'MnQMQWogE8ZpdqH_eCfsmgI64qDYz8LxMfA8p9/exec';
+
+const $ = id => document.getElementById(id);
+
+let pending = null;
+
+function showMessage(text,error=false) {
+  $('loginMessage').textContent = text;
+
+  $('loginMessage').className =
+    'message' + (error ? ' error' : '');
+}
+
+function api(action,data={}) {
+  if (pending) {
+    return Promise.reject(
+      new Error('이전 요청 처리 중입니다.')
+    );
+  }
+
+  return new Promise((resolve,reject) => {
+    const requestId = crypto.randomUUID();
+
+    const form = document.createElement('form');
+
+    form.method = 'POST';
+    form.action = API_URL;
+    form.target = 'festivalStudentGatewayFrame';
+    form.hidden = true;
+
+    const params = {
+      action,
+      requestId,
+      ...data
+    };
+
+    Object.entries(params).forEach(([key,value]) => {
+      const input = document.createElement('input');
+
+      input.type = 'hidden';
+      input.name = key;
+      input.value = String(value);
+
+      form.appendChild(input);
+    });
+
+    document.body.appendChild(form);
+
+    const timeout = setTimeout(() => {
+      if (
+        !pending ||
+        pending.requestId !== requestId
+      ) return;
+
+      pending = null;
+      form.remove();
+
+      reject(new Error(
+        '서버 응답이 없습니다. Apps Script 배포를 확인하세요.'
+      ));
+    },20000);
+
+    pending = {
+      requestId,
+      resolve,
+      reject,
+      form,
+      timeout
+    };
+
+    form.submit();
+  });
+}
+
+window.addEventListener('message',event => {
+  let host;
+
+  try {
+    host = new URL(event.origin).hostname;
+  } catch (_) {
+    return;
+  }
+
+  if (!(
+    host === 'script.google.com' ||
+    host === 'script.googleusercontent.com' ||
+    host.endsWith('.googleusercontent.com')
+  )) return;
+
+  const data = event.data;
+
+  if (
+    !pending ||
+    !data ||
+    data.type !== 'FESTIVAL_GATEWAY_RESPONSE' ||
+    data.requestId !== pending.requestId
+  ) return;
+
+  const p = pending;
+
+  pending = null;
+  clearTimeout(p.timeout);
+  p.form.remove();
+
+  if (data.ok) {
+    p.resolve(data.data);
+  } else {
+    p.reject(
+      new Error(data.error || '인증 실패')
+    );
+  }
+});
+
+$('studentId').addEventListener('input',() => {
+  $('studentId').value =
+    $('studentId').value
+      .replace(/\D/g,'')
+      .slice(0,5);
+});
+
+$('issuanceCode').addEventListener('input',() => {
+  $('issuanceCode').value =
+    $('issuanceCode').value
+      .toUpperCase()
+      .replace(/[^0-9A-F]/g,'')
+      .slice(0,8);
+});
+
+$('loginButton').addEventListener('click',async () => {
+  const studentId =
+    $('studentId').value.trim();
+
+  const issuanceCode =
+    $('issuanceCode').value.trim();
+
+  if (
+    !/^\d{5}$/.test(studentId) ||
+    !/^[0-9A-F]{8}$/.test(issuanceCode)
+  ) {
+    showMessage(
+      '학번 5자리와 발급코드 8자리를 확인하세요.',
+      true
+    );
+    return;
+  }
+
+  $('loginButton').disabled = true;
+  showMessage('확인 중...');
+
+  try {
+    const result = await api('studentLogin',{
+      studentId,
+      issuanceCode
+    });
+
+    if (
+      !result ||
+      !/^[0-9a-f]{64}$/.test(result.qrToken)
+    ) {
+      throw new Error(
+        '학생 QR 정보를 확인할 수 없습니다.'
+      );
+    }
+
+    if (typeof QRCode === 'undefined') {
+      throw new Error(
+        'QR 생성 라이브러리를 불러오지 못했습니다.'
+      );
+    }
+
+    $('qr').textContent = '';
+
+    new QRCode($('qr'),{
+      text:result.qrToken,
+      width:260,
+      height:260,
+      colorDark:'#111827',
+      colorLight:'#ffffff',
+      correctLevel:QRCode.CorrectLevel.M
+    });
+
+    $('studentLabel').textContent =
+      result.studentId + ' 학생';
+
+    $('issuanceCode').value = '';
+    $('loginPanel').hidden = true;
+    $('qrPanel').hidden = false;
+
+  } catch (e) {
+    showMessage(
+      '인증 실패: '+e.message,
+      true
+    );
+  } finally {
+    $('loginButton').disabled = false;
+  }
+});
+
+$('backButton').addEventListener('click',() => {
+  $('qr').textContent = '';
+  $('qrPanel').hidden = true;
+  $('loginPanel').hidden = false;
+
+  showMessage(
+    '다시 확인하려면 발급코드를 입력하세요.'
+  );
+});
+
+$('issuanceCode').addEventListener('keydown',e => {
+  if (e.key === 'Enter') {
+    $('loginButton').click();
+  }
+});
+</script>
+</body>
+</html>
