@@ -3,44 +3,250 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>2026 동아리 발표회 관리자</title>
 
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
 <style>
-*{box-sizing:border-box}
-body{margin:0;padding:18px;background:#f4f6fb;font-family:system-ui,-apple-system,sans-serif;color:#1f2937}
-.card{max-width:460px;margin:20px auto;padding:23px;background:#fff;border-radius:18px;box-shadow:0 4px 20px #0000000b}
-h1{text-align:center;font-size:22px;line-height:1.5}
-h2{text-align:center;font-size:19px}
-label{display:block;margin:18px 0 7px;font-weight:700}
-input,select,button{width:100%;padding:14px;font-size:16px;border-radius:11px}
-input,select{border:1px solid #ccd2de;background:white}
-button{border:0;background:#3858d6;color:#fff;font-weight:700;margin:10px 0}
-button:disabled{opacity:.5}
-.secondary{background:#e8ebf4;color:#333}
-.small{text-align:center;font-size:13px;color:#64748b;line-height:1.6}
-.countBox{background:#f4f6fb;border-radius:14px;padding:22px;text-align:center;margin:20px 0}
-.count{font-size:48px;color:#3858d6;font-weight:700;margin:10px}
-.scannerBox{border:1px solid #e2e6f0;border-radius:14px;padding:16px;margin-top:20px}
-#reader{width:100%;margin:12px auto}
-.buttons{display:flex;gap:8px}
-.buttons button{flex:1;min-width:0}
-.message{background:#f4f6fb;border-radius:10px;padding:13px;margin:12px 0;white-space:pre-line;overflow-wrap:anywhere;line-height:1.6;font-size:14px}
-.success{background:#e9f8ed;color:#166534}
-.error{background:#fef0ef;color:#b42318}
-.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
-.mode{background:#e8ebf4;color:#334155;margin:0}
-.mode.active{background:#3858d6;color:#fff}
-[hidden]{display:none!important}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 16px;
+  background: #f4f6fb;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #1f2937;
+}
+
+.card {
+  max-width: 460px;
+  margin: 18px auto;
+  padding: 22px;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 4px 20px #0000000b;
+}
+
+h1 {
+  font-size: 22px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+h2 {
+  font-size: 19px;
+  text-align: center;
+}
+
+label {
+  display: block;
+  margin: 18px 0 7px;
+  font-weight: 700;
+}
+
+input, select, button {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  border-radius: 11px;
+}
+
+input, select {
+  border: 1px solid #ccd2de;
+  background: white;
+}
+
+button {
+  border: 0;
+  background: #3858d6;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.secondary {
+  background: #e8ebf4;
+  color: #334155;
+}
+
+.small {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.countBox {
+  background: #f4f6fb;
+  border-radius: 14px;
+  padding: 20px;
+  text-align: center;
+  margin: 20px 0 12px;
+}
+
+.countBox h3 {
+  margin: 0;
+  font-size: 15px;
+  color: #475569;
+}
+
+.count {
+  font-size: 48px;
+  color: #3858d6;
+  font-weight: 800;
+  margin: 8px;
+}
+
+.refreshBtn {
+  background: transparent;
+  color: #64748b;
+  font-size: 13px;
+  padding: 9px;
+  margin: 0 0 12px;
+}
+
+.scannerBox {
+  border: 1px solid #e2e6f0;
+  border-radius: 16px;
+  padding: 16px;
+  margin-top: 12px;
+}
+
+.scanGuide {
+  font-size: 14px;
+  color: #64748b;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.scanModes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.scanModes button {
+  margin: 0;
+  min-height: 106px;
+  border: 3px solid transparent;
+  border-radius: 16px;
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1.6;
+}
+
+.scanModes small {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+#enterModeBtn {
+  background: #e9f7ee;
+  color: #166534;
+}
+
+#exitModeBtn {
+  background: #fff0f0;
+  color: #b91c1c;
+}
+
+#enterModeBtn.active {
+  background: #15803d;
+  color: white;
+  border-color: #14532d;
+}
+
+#exitModeBtn.active {
+  background: #dc2626;
+  color: white;
+  border-color: #991b1b;
+}
+
+.scanModeLabel {
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 21px;
+  font-weight: 800;
+  margin: 14px 0;
+}
+
+.scannerBox[data-mode="enter"] .scanModeLabel {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.scannerBox[data-mode="exit"] .scanModeLabel {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+#reader {
+  width: 100%;
+  margin: 12px auto;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.scannerBox[data-mode="enter"] #reader {
+  border: 3px solid #16a34a;
+}
+
+.scannerBox[data-mode="exit"] #reader {
+  border: 3px solid #dc2626;
+}
+
+#stopBtn {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.message {
+  background: #f4f6fb;
+  border-radius: 10px;
+  padding: 13px;
+  margin: 12px 0;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.success {
+  background: #e9f8ed;
+  color: #166534;
+}
+
+.error {
+  background: #fef0ef;
+  color: #b42318;
+}
+
+[hidden] {
+  display: none !important;
+}
 </style>
 </head>
 
 <body>
 
+<!-- 로그인 화면 -->
 <div class="card" id="loginPage">
-  <h1>2026 대전노은고등학교<br>동아리 발표회</h1>
+  <h1>
+    2026 대전노은고등학교<br>
+    동아리 발표회
+  </h1>
+
   <h2>부스 관리자 로그인</h2>
 
   <label for="club">동아리 선택</label>
@@ -56,62 +262,92 @@ button:disabled{opacity:.5}
   >
 
   <button id="loginBtn">로그인</button>
+
   <div id="loginMessage" class="message">
     관리자코드를 입력하세요.
   </div>
 </div>
 
+<!-- 관리자 화면 -->
 <div class="card" id="managerPage" hidden>
 
   <h1 id="managerTitle">동아리 관리자</h1>
 
   <div class="countBox">
     <h3>현재 부스 인원</h3>
+
     <div class="count">
       <span id="currentCount">-</span>명
     </div>
+
     <p id="countStatus" class="small">
       인원 확인 대기
     </p>
   </div>
 
-  <button id="refreshBtn" class="secondary">
-    인원 새로고침
+  <button id="refreshBtn" class="refreshBtn">
+    ↻ 인원 새로고침
   </button>
 
-  <div class="scannerBox">
-    <h2>학생 QR 스캐너</h2>
-    <p class="small">현재 처리할 작업을 선택하세요.</p>
+  <div
+    class="scannerBox"
+    id="scannerBox"
+    data-mode="enter"
+  >
 
-    <div class="modes">
-      <button id="enterModeBtn" class="mode active">
-        입장 (+1)
+    <h2>학생 QR 스캔</h2>
+
+    <p class="scanGuide">
+      학생이 들어오면 입장 스캔,<br>
+      나가면 퇴장 스캔을 눌러주세요.
+    </p>
+
+    <div class="scanModes">
+      <button id="enterModeBtn">
+        🟢 입장 스캔<br>
+        <small>들어오는 학생</small>
       </button>
-      <button id="exitModeBtn" class="mode">
-        퇴장 (-1)
+
+      <button id="exitModeBtn">
+        🔴 퇴장 스캔<br>
+        <small>나가는 학생</small>
       </button>
+    </div>
+
+    <div
+      id="scanModeLabel"
+      class="scanModeLabel"
+    >
+      스캔 대기 중
     </div>
 
     <div id="reader"></div>
 
-    <div class="buttons">
-      <button id="startBtn">카메라 켜기</button>
-      <button id="stopBtn" class="secondary" disabled>
-        카메라 끄기
-      </button>
-    </div>
+    <button
+      id="stopBtn"
+      class="secondary"
+      hidden
+      disabled
+    >
+      ■ 스캔 종료
+    </button>
 
     <div id="scanStatus" class="message">
-      입장 모드 · 스캔 대기 중
+      입장 또는 퇴장 스캔을 선택하세요.
     </div>
 
-    <div id="studentResult" class="message" hidden></div>
+    <div
+      id="studentResult"
+      class="message"
+      hidden
+    ></div>
 
     <p class="small">
-      QR을 스캔하면 학생 상태와 부스 인원을
-      함께 갱신합니다. 중복 입장·퇴장은
-      인원을 변경하지 않습니다.
+      한 번 시작하면 여러 학생을 연속으로
+      스캔할 수 있습니다.<br>
+      중복 입장·퇴장은 인원을 변경하지 않습니다.
     </p>
+
   </div>
 
   <button id="logoutBtn" class="secondary">
@@ -119,6 +355,7 @@ button:disabled{opacity:.5}
   </button>
 </div>
 
+<!-- Apps Script 통신용 -->
 <iframe
   id="gatewayFrame"
   name="festivalGatewayFrame"
@@ -135,23 +372,41 @@ const API_URL =
 const $ = id => document.getElementById(id);
 
 const names = [
-  'Chem Is Try','Clavis','D.P.','E.P.C.',
-  'INNOBIZ','IVECA','L.I.G.','Mechanic',
-  'M.V.P','NBRC','NEBS','Nurse I Am',
-  'Polaris','S.I.S.','T.L.','뉴턴',
-  '디오니소스','미토피아','심장',
-  '온본디','이슈있슈','인문이문',
-  '일본문화탐구동아리','창공','축구부',
+  'Chem Is Try',
+  'Clavis',
+  'D.P.',
+  'E.P.C.',
+  'INNOBIZ',
+  'IVECA',
+  'L.I.G.',
+  'Mechanic',
+  'M.V.P',
+  'NBRC',
+  'NEBS',
+  'Nurse I Am',
+  'Polaris',
+  'S.I.S.',
+  'T.L.',
+  '뉴턴',
+  '디오니소스',
+  '미토피아',
+  '심장',
+  '온본디',
+  '이슈있슈',
+  '인문이문',
+  '일본문화탐구동아리',
+  '창공',
+  '축구부',
   '크레센도'
 ];
 
-const clubs = names.map((name,i) => ({
-  id: 'club' + String(i+1).padStart(2,'0'),
+const clubs = names.map((name, i) => ({
+  id: 'club' + String(i + 1).padStart(2, '0'),
   name
 }));
 
 const clubMap = new Map(
-  clubs.map(c => [c.id,c.name])
+  clubs.map(c => [c.id, c.name])
 );
 
 clubs.forEach(c => {
@@ -163,27 +418,42 @@ clubs.forEach(c => {
 
 let session = null;
 let clubId = null;
+
 let scanner = null;
 let starting = false;
+let stopping = false;
 let busy = false;
+
 let timer = null;
 let mode = 'enter';
+
 let lastToken = '';
 let lastAt = 0;
 
 const queue = [];
 let pending = null;
 
-function message(id,text,type='') {
+function message(id, text, type = '') {
   const e = $(id);
+
   e.hidden = false;
   e.textContent = text;
-  e.className = 'message' + (type ? ' '+type : '');
+
+  e.className =
+    'message' + (type ? ' ' + type : '');
 }
 
-function api(action,data={}) {
-  return new Promise((resolve,reject) => {
-    queue.push({action,data,resolve,reject});
+/* Apps Script 통신 */
+
+function api(action, data = {}) {
+  return new Promise((resolve, reject) => {
+    queue.push({
+      action,
+      data,
+      resolve,
+      reject
+    });
+
     nextRequest();
   });
 }
@@ -195,6 +465,7 @@ function nextRequest() {
   const requestId = crypto.randomUUID();
 
   const form = document.createElement('form');
+
   form.method = 'POST';
   form.action = API_URL;
   form.target = 'festivalGatewayFrame';
@@ -206,28 +477,37 @@ function nextRequest() {
     ...job.data
   };
 
-  Object.entries(params).forEach(([key,value]) => {
-    const input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = key;
-    input.value = String(value ?? '');
-    form.appendChild(input);
-  });
+  Object.entries(params).forEach(
+    ([key, value]) => {
+      const input =
+        document.createElement('input');
+
+      input.type = 'hidden';
+      input.name = key;
+      input.value = String(value ?? '');
+
+      form.appendChild(input);
+    }
+  );
 
   document.body.appendChild(form);
 
   const timeout = setTimeout(() => {
-    if (!pending || pending.id !== requestId) return;
+    if (
+      !pending ||
+      pending.id !== requestId
+    ) return;
 
     pending = null;
     form.remove();
 
     job.reject(new Error(
-      '서버 응답이 없습니다. Apps Script 배포를 확인하세요.'
+      '서버 응답이 없습니다. ' +
+      'Apps Script 배포를 확인하세요.'
     ));
 
     nextRequest();
-  },20000);
+  }, 20000);
 
   pending = {
     id: requestId,
@@ -239,7 +519,7 @@ function nextRequest() {
   form.submit();
 }
 
-window.addEventListener('message',event => {
+window.addEventListener('message', event => {
   let host;
 
   try {
@@ -273,18 +553,22 @@ window.addEventListener('message',event => {
     current.job.resolve(data.data);
   } else {
     current.job.reject(
-      new Error(data.error || '서버 오류')
+      new Error(
+        data.error || '서버 오류'
+      )
     );
   }
 
   nextRequest();
 });
 
-$('code').addEventListener('input',() => {
+/* 관리자 로그인 */
+
+$('code').addEventListener('input', () => {
   $('code').value = $('code').value
     .toUpperCase()
-    .replace(/[^0-9A-F]/g,'')
-    .slice(0,8);
+    .replace(/[^0-9A-F]/g, '')
+    .slice(0, 8);
 });
 
 async function login() {
@@ -304,11 +588,15 @@ async function login() {
   }
 
   $('loginBtn').disabled = true;
-  message('loginMessage','로그인 확인 중...');
+
+  message(
+    'loginMessage',
+    '로그인 확인 중...'
+  );
 
   try {
-    const result = await api('login',{
-      clubId:selected,
+    const result = await api('login', {
+      clubId: selected,
       code
     });
 
@@ -326,24 +614,32 @@ async function login() {
     $('managerPage').hidden = false;
 
     $('managerTitle').textContent =
-      (result.clubName || clubMap.get(selected)) +
+      (result.clubName ||
+       clubMap.get(selected)) +
       ' 관리자';
 
+    resetScanUI();
+
+    // 로그인 후 인원만 조회
+    // 카메라는 관리자가 모드를 선택할 때 실행
     void refreshCount();
-    void startScanner();
 
     clearInterval(timer);
 
     timer = setInterval(() => {
-      if (session && !document.hidden && !busy) {
+      if (
+        session &&
+        !document.hidden &&
+        !busy
+      ) {
         refreshCount();
       }
-    },60000);
+    }, 60000);
 
   } catch (e) {
     message(
       'loginMessage',
-      '로그인 실패: '+e.message,
+      '로그인 실패: ' + e.message,
       'error'
     );
   } finally {
@@ -351,15 +647,19 @@ async function login() {
   }
 }
 
+/* 현재 부스 인원 조회 */
+
 async function refreshCount() {
   if (!session) return;
 
   const current = session;
-  $('countStatus').textContent = '인원 조회 중...';
+
+  $('countStatus').textContent =
+    '인원 조회 중...';
 
   try {
-    const result = await api('count',{
-      session:current
+    const result = await api('count', {
+      session: current
     });
 
     if (current !== session) return;
@@ -373,45 +673,107 @@ async function refreshCount() {
   } catch (e) {
     if (current === session) {
       $('countStatus').textContent =
-        '조회 실패: '+e.message;
+        '조회 실패: ' + e.message;
     }
   }
 }
 
-async function setMode(next) {
-  if (busy || starting) return;
+/* 스캔 UI 초기화 */
 
-  // 입장·퇴장 모드 전환 시 카메라를
-  // 종료해 실수로 반대 처리가 되지 않게 함
-  if (scanner) {
-    await stopScanner();
+function resetScanUI() {
+  mode = 'enter';
+
+  $('enterModeBtn').classList.remove(
+    'active'
+  );
+
+  $('exitModeBtn').classList.remove(
+    'active'
+  );
+
+  $('scannerBox').dataset.mode = 'enter';
+
+  $('scanModeLabel').textContent =
+    '스캔 대기 중';
+
+  $('stopBtn').hidden = true;
+  $('stopBtn').disabled = true;
+
+  $('studentResult').hidden = true;
+
+  message(
+    'scanStatus',
+    '입장 또는 퇴장 스캔을 선택하세요.'
+  );
+}
+
+/* 입장/퇴장 선택 */
+
+async function setMode(next) {
+  if (!session) return;
+
+  if (
+    busy ||
+    starting ||
+    stopping
+  ) return;
+
+  if (
+    next !== 'enter' &&
+    next !== 'exit'
+  ) return;
+
+  // 모드 변경 전 기존 카메라 종료
+  if (scanner && mode !== next) {
+    await stopScanner(true);
   }
 
   mode = next;
+
   lastToken = '';
   lastAt = 0;
 
+  const isEnter = next === 'enter';
+
   $('enterModeBtn').classList.toggle(
     'active',
-    next === 'enter'
+    isEnter
   );
 
   $('exitModeBtn').classList.toggle(
     'active',
-    next === 'exit'
+    !isEnter
   );
+
+  $('scannerBox').dataset.mode = next;
+
+  $('scanModeLabel').textContent =
+    isEnter
+      ? '🟢 입장 처리 중'
+      : '🔴 퇴장 처리 중';
+
+  $('studentResult').hidden = true;
 
   message(
     'scanStatus',
-    (next === 'enter' ? '입장' : '퇴장') +
-    ' 모드 · QR을 비춰 주세요.'
+    isEnter
+      ? '입장 모드 · 들어오는 학생의 QR을 비춰주세요.'
+      : '퇴장 모드 · 나가는 학생의 QR을 비춰주세요.'
   );
 
-  $('studentResult').hidden = true;
+  // 모드 선택 시 카메라 자동 시작
+  await startScanner();
 }
 
+/* 카메라 시작 */
+
 async function startScanner() {
-  if (scanner || starting || !session) return;
+  if (
+    scanner ||
+    starting ||
+    stopping ||
+    !session
+  ) return;
 
   if (typeof Html5Qrcode === 'undefined') {
     message(
@@ -423,30 +785,39 @@ async function startScanner() {
   }
 
   starting = true;
-  $('startBtn').disabled = true;
 
-  const instance = new Html5Qrcode('reader');
+  $('enterModeBtn').disabled = true;
+  $('exitModeBtn').disabled = true;
+
+  const instance =
+    new Html5Qrcode('reader');
+
   scanner = instance;
 
   try {
     await instance.start(
-      { facingMode:'environment' },
       {
-        fps:10,
-        qrbox:{
-          width:220,
-          height:220
+        facingMode: 'environment'
+      },
+      {
+        fps: 10,
+        qrbox: {
+          width: 220,
+          height: 220
         }
       },
       scanSuccess,
       () => {}
     );
 
+    $('stopBtn').hidden = false;
     $('stopBtn').disabled = false;
 
     message(
       'scanStatus',
-      (mode === 'enter' ? '입장' : '퇴장') +
+      (mode === 'enter'
+        ? '🟢 입장'
+        : '🔴 퇴장') +
       ' 모드 · 카메라 실행 중'
     );
 
@@ -455,7 +826,8 @@ async function startScanner() {
 
     message(
       'scanStatus',
-      '카메라 오류: '+e.message,
+      '카메라 오류: ' + e.message +
+      '\n다시 입장 또는 퇴장 스캔을 눌러주세요.',
       'error'
     );
 
@@ -463,35 +835,71 @@ async function startScanner() {
       instance.clear();
     } catch (_) {}
 
+    $('stopBtn').hidden = true;
+
   } finally {
     starting = false;
-    $('startBtn').disabled = !!scanner;
+
+    $('enterModeBtn').disabled = false;
+    $('exitModeBtn').disabled = false;
   }
 }
 
-async function stopScanner() {
-  if (!scanner) return;
+/* 카메라 종료 */
+
+async function stopScanner(silent = false) {
+  if (stopping) return;
+
+  stopping = true;
 
   const instance = scanner;
   scanner = null;
 
   try {
-    if (instance.isScanning) {
-      await instance.stop();
+    if (instance) {
+      if (instance.isScanning) {
+        await instance.stop();
+      }
+
+      instance.clear();
     }
-    instance.clear();
   } catch (e) {
     console.error(e);
+  } finally {
+    $('stopBtn').disabled = true;
+    $('stopBtn').hidden = true;
+
+    stopping = false;
   }
 
-  $('startBtn').disabled = false;
-  $('stopBtn').disabled = true;
+  if (!silent) {
+    $('enterModeBtn').classList.remove(
+      'active'
+    );
 
-  message('scanStatus','카메라 종료');
+    $('exitModeBtn').classList.remove(
+      'active'
+    );
+
+    $('scanModeLabel').textContent =
+      '스캔 종료됨';
+
+    message(
+      'scanStatus',
+      '스캔이 종료되었습니다. ' +
+      '다시 시작하려면 입장 또는 퇴장 스캔을 눌러주세요.'
+    );
+  }
 }
 
+/* QR 스캔 성공 */
+
 async function scanSuccess(value) {
-  if (busy || !session) return;
+  if (
+    busy ||
+    !session ||
+    stopping
+  ) return;
 
   const token = String(value || '')
     .trim()
@@ -501,7 +909,7 @@ async function scanSuccess(value) {
 
   if (
     token === lastToken &&
-    now-lastAt < 5000
+    now - lastAt < 5000
   ) return;
 
   lastToken = token;
@@ -523,19 +931,25 @@ async function scanSuccess(value) {
 
   $('enterModeBtn').disabled = true;
   $('exitModeBtn').disabled = true;
+  $('stopBtn').disabled = true;
 
   message(
     'scanStatus',
-    (requestedMode === 'enter' ? '입장' : '퇴장') +
+    (requestedMode === 'enter'
+      ? '입장'
+      : '퇴장') +
     ' 처리 중...'
   );
 
   try {
-    const result = await api('attendance',{
-      session:current,
-      token,
-      mode:requestedMode
-    });
+    const result = await api(
+      'attendance',
+      {
+        session: current,
+        token,
+        mode: requestedMode
+      }
+    );
 
     if (current !== session) return;
 
@@ -557,13 +971,13 @@ async function scanSuccess(value) {
 
     const lines = {
       entered:
-        '입장 완료 (+1명)',
+        '🟢 입장 완료 (+1명)',
 
       exited:
-        '퇴장 완료 (-1명)',
+        '🔴 퇴장 완료 (-1명)',
 
       transferred:
-        '다른 부스에서 이동 완료 (+1명)',
+        '🟢 다른 부스에서 이동 완료 (+1명)',
 
       already_inside:
         '이미 이 부스에 입장한 학생입니다. ' +
@@ -574,12 +988,12 @@ async function scanSuccess(value) {
           ? '이 부스에 입장 중이 아닙니다. ' +
             '현재 부스: ' +
             (clubMap.get(other) || other)
-
           : '이 부스에 입장 중이 아닙니다. ' +
             '(인원 변경 없음)'
     };
 
-    const text = lines[result.action] ||
+    const text =
+      lines[result.action] ||
       '처리 결과를 확인하지 못했습니다.';
 
     message(
@@ -596,7 +1010,10 @@ async function scanSuccess(value) {
 
     message(
       'scanStatus',
-      '처리 완료 · 다음 QR 스캔 가능'
+      (requestedMode === 'enter'
+        ? '🟢 입장'
+        : '🔴 퇴장') +
+      ' 모드 · 다음 QR 스캔 가능'
     );
 
   } catch (e) {
@@ -606,7 +1023,7 @@ async function scanSuccess(value) {
     if (current === session) {
       message(
         'studentResult',
-        '처리 실패: '+e.message,
+        '처리 실패: ' + e.message,
         'error'
       );
 
@@ -617,10 +1034,16 @@ async function scanSuccess(value) {
     }
   } finally {
     busy = false;
+
     $('enterModeBtn').disabled = false;
     $('exitModeBtn').disabled = false;
+
+    $('stopBtn').disabled =
+      !scanner;
   }
 }
+
+/* 로그아웃 */
 
 async function logout() {
   const old = session;
@@ -630,17 +1053,18 @@ async function logout() {
 
   clearInterval(timer);
 
-  await stopScanner();
+  await stopScanner(true);
 
   $('managerPage').hidden = true;
   $('loginPage').hidden = false;
+
   $('studentResult').hidden = true;
   $('currentCount').textContent = '-';
 
   lastToken = '';
   lastAt = 0;
 
-  setMode('enter');
+  resetScanUI();
 
   message(
     'loginMessage',
@@ -649,8 +1073,8 @@ async function logout() {
 
   if (old) {
     try {
-      await api('logout',{
-        session:old
+      await api('logout', {
+        session: old
       });
     } catch (e) {
       console.error(e);
@@ -658,7 +1082,12 @@ async function logout() {
   }
 }
 
-$('loginBtn').addEventListener('click',login);
+/* 버튼 이벤트 */
+
+$('loginBtn').addEventListener(
+  'click',
+  login
+);
 
 $('refreshBtn').addEventListener(
   'click',
@@ -675,14 +1104,9 @@ $('exitModeBtn').addEventListener(
   () => setMode('exit')
 );
 
-$('startBtn').addEventListener(
-  'click',
-  startScanner
-);
-
 $('stopBtn').addEventListener(
   'click',
-  stopScanner
+  () => stopScanner()
 );
 
 $('logoutBtn').addEventListener(
@@ -690,11 +1114,14 @@ $('logoutBtn').addEventListener(
   logout
 );
 
-$('code').addEventListener('keydown',e => {
-  if (e.key === 'Enter') {
-    login();
+$('code').addEventListener(
+  'keydown',
+  e => {
+    if (e.key === 'Enter') {
+      login();
+    }
   }
-});
+);
 </script>
 </body>
 </html>
