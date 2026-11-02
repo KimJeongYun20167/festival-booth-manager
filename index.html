@@ -329,8 +329,8 @@ async function login() {
       (result.clubName || clubMap.get(selected)) +
       ' 관리자';
 
-    await refreshCount();
-    await startScanner();
+    void refreshCount();
+    void startScanner();
 
     clearInterval(timer);
 
