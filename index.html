@@ -330,6 +330,7 @@ async function login() {
       ' 관리자';
 
     await refreshCount();
+    await startScanner();
 
     clearInterval(timer);
 
