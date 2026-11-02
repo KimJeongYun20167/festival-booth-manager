@@ -5,363 +5,104 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>2026 동아리 발표회 관리자</title>
-
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-
 <style>
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  padding: 16px;
-  background: #f4f6fb;
-  font-family: system-ui, -apple-system, sans-serif;
-  color: #1f2937;
-}
-
-.card {
-  max-width: 460px;
-  margin: 18px auto;
-  padding: 22px;
-  background: white;
-  border-radius: 18px;
-  box-shadow: 0 4px 20px #0000000b;
-}
-
-h1 {
-  font-size: 22px;
-  line-height: 1.5;
-  text-align: center;
-}
-
-h2 {
-  font-size: 19px;
-  text-align: center;
-}
-
-label {
-  display: block;
-  margin: 18px 0 7px;
-  font-weight: 700;
-}
-
-input, select, button {
-  width: 100%;
-  padding: 14px;
-  font-size: 16px;
-  border-radius: 11px;
-}
-
-input, select {
-  border: 1px solid #ccd2de;
-  background: white;
-}
-
-button {
-  border: 0;
-  background: #3858d6;
-  color: white;
-  font-weight: 700;
-  cursor: pointer;
-  margin: 10px 0;
-}
-
-button:disabled {
-  opacity: .5;
-  cursor: not-allowed;
-}
-
-.secondary {
-  background: #e8ebf4;
-  color: #334155;
-}
-
-.small {
-  font-size: 13px;
-  color: #64748b;
-  line-height: 1.6;
-  text-align: center;
-}
-
-.countBox {
-  background: #f4f6fb;
-  border-radius: 14px;
-  padding: 20px;
-  text-align: center;
-  margin: 20px 0 12px;
-}
-
-.countBox h3 {
-  margin: 0;
-  font-size: 15px;
-  color: #475569;
-}
-
-.count {
-  font-size: 48px;
-  color: #3858d6;
-  font-weight: 800;
-  margin: 8px;
-}
-
-.refreshBtn {
-  background: transparent;
-  color: #64748b;
-  font-size: 13px;
-  padding: 9px;
-  margin: 0 0 12px;
-}
-
-.scannerBox {
-  border: 1px solid #e2e6f0;
-  border-radius: 16px;
-  padding: 16px;
-  margin-top: 12px;
-}
-
-.scanGuide {
-  font-size: 14px;
-  color: #64748b;
-  text-align: center;
-  line-height: 1.6;
-}
-
-.scanModes {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin: 18px 0;
-}
-
-.scanModes button {
-  margin: 0;
-  min-height: 106px;
-  border: 3px solid transparent;
-  border-radius: 16px;
-  font-size: 19px;
-  font-weight: 800;
-  line-height: 1.6;
-}
-
-.scanModes small {
-  font-size: 12px;
-  font-weight: 500;
-}
-
-#enterModeBtn {
-  background: #e9f7ee;
-  color: #166534;
-}
-
-#exitModeBtn {
-  background: #fff0f0;
-  color: #b91c1c;
-}
-
-#enterModeBtn.active {
-  background: #15803d;
-  color: white;
-  border-color: #14532d;
-}
-
-#exitModeBtn.active {
-  background: #dc2626;
-  color: white;
-  border-color: #991b1b;
-}
-
-.scanModeLabel {
-  padding: 15px;
-  border-radius: 12px;
-  text-align: center;
-  font-size: 21px;
-  font-weight: 800;
-  margin: 14px 0;
-}
-
-.scannerBox[data-mode="enter"] .scanModeLabel {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.scannerBox[data-mode="exit"] .scanModeLabel {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-#reader {
-  width: 100%;
-  margin: 12px auto;
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.scannerBox[data-mode="enter"] #reader {
-  border: 3px solid #16a34a;
-}
-
-.scannerBox[data-mode="exit"] #reader {
-  border: 3px solid #dc2626;
-}
-
-#stopBtn {
-  background: #e2e8f0;
-  color: #334155;
-}
-
-.message {
-  background: #f4f6fb;
-  border-radius: 10px;
-  padding: 13px;
-  margin: 12px 0;
-  white-space: pre-line;
-  overflow-wrap: anywhere;
-  line-height: 1.6;
-  font-size: 14px;
-}
-
-.success {
-  background: #e9f8ed;
-  color: #166534;
-}
-
-.error {
-  background: #fef0ef;
-  color: #b42318;
-}
-
-[hidden] {
-  display: none !important;
-}
+*{box-sizing:border-box}
+body{margin:0;padding:16px;background:#f3f5fa;color:#1e293b;font-family:system-ui,-apple-system,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer;border:0;border-radius:12px;padding:14px;font-weight:800}
+button:disabled{opacity:.48;cursor:not-allowed}
+.card{max-width:480px;margin:18px auto;padding:22px;background:#fff;border-radius:20px;box-shadow:0 6px 25px #16264b0c}
+h1{text-align:center;font-size:22px;line-height:1.5;margin:0 0 20px}
+h2{text-align:center;font-size:19px;margin:12px 0}
+label{display:block;margin:16px 0 7px;font-weight:700}
+input,select{width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:11px;background:#fff;font-size:16px}
+.primary{width:100%;background:#3455d5;color:white;margin-top:18px}
+.secondary{width:100%;background:#e9edf5;color:#334155;margin-top:12px}
+.small{color:#64748b;font-size:13px;line-height:1.6;text-align:center}
+.countBox{background:#f3f5fa;border-radius:16px;text-align:center;padding:18px;margin:15px 0 6px}
+.countBox h3{font-size:14px;color:#64748b;margin:0}
+.count{font-size:48px;font-weight:850;color:#3455d5;margin:5px}
+.refresh{display:block;margin:0 auto 16px;background:transparent;color:#64748b;font-size:13px;padding:9px}
+.scannerBox{border:1px solid #e2e8f0;border-radius:16px;padding:16px}
+.scanModes{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+.scanModes button{min-height:100px;border:3px solid transparent;font-size:19px;line-height:1.5}
+.scanModes small{display:block;font-size:12px;font-weight:500;margin-top:4px}
+.enterBtn{background:#e8f7ee;color:#166534}
+.exitBtn{background:#fff0f0;color:#b91c1c}
+.enterBtn.active{background:#15803d;border-color:#14532d;color:white}
+.exitBtn.active{background:#dc2626;border-color:#991b1b;color:white}
+.modeLabel{border-radius:12px;text-align:center;padding:14px;font-weight:850;font-size:21px;background:#eef2f7;color:#475569}
+.scannerBox[data-mode=enter] .modeLabel.running{background:#dcfce7;color:#166534}
+.scannerBox[data-mode=exit] .modeLabel.running{background:#fee2e2;color:#991b1b}
+#reader{width:100%;margin:12px auto;border-radius:12px;overflow:hidden}
+#reader:not(:empty){border:3px solid #94a3b8}
+.scannerBox[data-mode=enter] #reader:not(:empty){border-color:#16a34a}
+.scannerBox[data-mode=exit] #reader:not(:empty){border-color:#dc2626}
+.message{border-radius:10px;background:#f1f5f9;padding:12px;margin:12px 0;white-space:pre-line;overflow-wrap:anywhere;font-size:14px;line-height:1.5}
+.success{background:#e9f8ed;color:#166534}
+.error{background:#fff0f0;color:#b42318}
+.hint{text-align:center;color:#64748b;font-size:13px;line-height:1.6}
+[hidden]{display:none!important}
 </style>
 </head>
-
 <body>
 
-<!-- 로그인 화면 -->
 <div class="card" id="loginPage">
-  <h1>
-    2026 대전노은고등학교<br>
-    동아리 발표회
-  </h1>
-
+  <h1>2026 대전노은고등학교<br>동아리 발표회</h1>
   <h2>부스 관리자 로그인</h2>
-
   <label for="club">동아리 선택</label>
-  <select id="club"></select>
-
+  <select id="club">
+    <option value="" selected disabled>동아리를 선택하세요</option>
+  </select>
   <label for="code">관리자코드 (8자리)</label>
-  <input
-    id="code"
-    type="password"
-    maxlength="8"
-    placeholder="8자리 관리자코드"
-    autocomplete="off"
-  >
-
-  <button id="loginBtn">로그인</button>
-
-  <div id="loginMessage" class="message">
-    관리자코드를 입력하세요.
-  </div>
+  <input id="code" type="password" maxlength="8"
+    placeholder="8자리 관리자코드" autocomplete="off">
+  <button id="loginBtn" class="primary">로그인</button>
+  <div id="loginMessage" class="message">동아리를 선택하고 관리자코드를 입력하세요.</div>
 </div>
 
-<!-- 관리자 화면 -->
 <div class="card" id="managerPage" hidden>
-
   <h1 id="managerTitle">동아리 관리자</h1>
-
   <div class="countBox">
     <h3>현재 부스 인원</h3>
-
-    <div class="count">
-      <span id="currentCount">-</span>명
-    </div>
-
-    <p id="countStatus" class="small">
-      인원 확인 대기
-    </p>
+    <div class="count"><span id="currentCount">-</span>명</div>
+    <p id="countStatus" class="small">인원 확인 대기</p>
   </div>
+  <button id="refreshBtn" class="refresh">↻ 인원 새로고침</button>
 
-  <button id="refreshBtn" class="refreshBtn">
-    ↻ 인원 새로고침
-  </button>
-
-  <div
-    class="scannerBox"
-    id="scannerBox"
-    data-mode="enter"
-  >
-
+  <div class="scannerBox" id="scannerBox" data-mode="none">
     <h2>학생 QR 스캔</h2>
-
-    <p class="scanGuide">
-      학생이 들어오면 입장 스캔,<br>
-      나가면 퇴장 스캔을 눌러주세요.
-    </p>
+    <p class="hint">들어오는 학생은 <strong>입장 스캔</strong>,<br>
+      나가는 학생은 <strong>퇴장 스캔</strong>을 눌러주세요.</p>
 
     <div class="scanModes">
-      <button id="enterModeBtn">
-        🟢 입장 스캔<br>
-        <small>들어오는 학생</small>
+      <button id="enterModeBtn" class="enterBtn">
+        입장 스캔
+        <small>부스에 들어올 때</small>
       </button>
-
-      <button id="exitModeBtn">
-        🔴 퇴장 스캔<br>
-        <small>나가는 학생</small>
+      <button id="exitModeBtn" class="exitBtn">
+        퇴장 스캔
+        <small>부스에서 나갈 때</small>
       </button>
     </div>
 
-    <div
-      id="scanModeLabel"
-      class="scanModeLabel"
-    >
-      스캔 대기 중
-    </div>
-
+    <div id="scanModeLabel" class="modeLabel">스캔 대기 중</div>
     <div id="reader"></div>
-
-    <button
-      id="stopBtn"
-      class="secondary"
-      hidden
-      disabled
-    >
-      ■ 스캔 종료
-    </button>
-
+    <button id="stopBtn" class="secondary" hidden>스캔 종료</button>
     <div id="scanStatus" class="message">
-      입장 또는 퇴장 스캔을 선택하세요.
+      위에서 입장 또는 퇴장 스캔을 선택하세요.
     </div>
-
-    <div
-      id="studentResult"
-      class="message"
-      hidden
-    ></div>
-
-    <p class="small">
-      한 번 시작하면 여러 학생을 연속으로
-      스캔할 수 있습니다.<br>
-      중복 입장·퇴장은 인원을 변경하지 않습니다.
-    </p>
-
+    <div id="studentResult" class="message" hidden></div>
+    <p class="small">한 번 시작하면 여러 학생을 연속 스캔할 수 있습니다.<br>
+      중복 입장·퇴장은 인원을 변경하지 않습니다.</p>
   </div>
 
-  <button id="logoutBtn" class="secondary">
-    로그아웃
-  </button>
+  <button id="logoutBtn" class="secondary">로그아웃</button>
 </div>
 
-<!-- Apps Script 통신용 -->
-<iframe
-  id="gatewayFrame"
-  name="festivalGatewayFrame"
-  hidden
-  title="서버 통신"
-></iframe>
+<iframe id="gatewayFrame" name="festivalGatewayFrame"
+  hidden title="서버 통신"></iframe>
 
 <script>
 const API_URL =
@@ -369,759 +110,476 @@ const API_URL =
   'AKfycbzWKKP6y-6SotsccJUOiw-Ep7ybm-' +
   'MnQMQWogE8ZpdqH_eCfsmgI64qDYz8LxMfA8p9/exec';
 
+const STORAGE_KEY = 'festival_manager_session_v1';
+const MAX_REMEMBER_MS = 8 * 60 * 60 * 1000;
 const $ = id => document.getElementById(id);
 
 const names = [
-  'Chem Is Try',
-  'Clavis',
-  'D.P.',
-  'E.P.C.',
-  'INNOBIZ',
-  'IVECA',
-  'L.I.G.',
-  'Mechanic',
-  'M.V.P',
-  'NBRC',
-  'NEBS',
-  'Nurse I Am',
-  'Polaris',
-  'S.I.S.',
-  'T.L.',
-  '뉴턴',
-  '디오니소스',
-  '미토피아',
-  '심장',
-  '온본디',
-  '이슈있슈',
-  '인문이문',
-  '일본문화탐구동아리',
-  '창공',
-  '축구부',
+  'Chem Is Try','Clavis','D.P.','E.P.C.',
+  'INNOBIZ','IVECA','L.I.G.','Mechanic',
+  'M.V.P','NBRC','NEBS','Nurse I Am',
+  'Polaris','S.I.S.','T.L.','뉴턴',
+  '디오니소스','미토피아','심장',
+  '온본디','이슈있슈','인문이문',
+  '일본문화탐구동아리','창공','축구부',
   '크레센도'
 ];
 
-const clubs = names.map((name, i) => ({
-  id: 'club' + String(i + 1).padStart(2, '0'),
+const clubs = names.map((name,i)=>({
+  id:'club'+String(i+1).padStart(2,'0'),
   name
 }));
+const clubMap = new Map(clubs.map(c=>[c.id,c.name]));
 
-const clubMap = new Map(
-  clubs.map(c => [c.id, c.name])
-);
-
-clubs.forEach(c => {
-  const option = document.createElement('option');
-  option.value = c.id;
-  option.textContent = c.name;
+clubs.forEach(c=>{
+  const option=document.createElement('option');
+  option.value=c.id;
+  option.textContent=c.name;
   $('club').appendChild(option);
 });
 
-let session = null;
-let clubId = null;
+let session=null,clubId=null,scanner=null;
+let starting=false,stopping=false,busy=false,modeTransition=false;
+let timer=null,mode=null,lastToken='',lastAt=0;
+const queue=[];
+let pending=null;
 
-let scanner = null;
-let starting = false;
-let stopping = false;
-let busy = false;
-
-let timer = null;
-let mode = 'enter';
-
-let lastToken = '';
-let lastAt = 0;
-
-const queue = [];
-let pending = null;
-
-function message(id, text, type = '') {
-  const e = $(id);
-
-  e.hidden = false;
-  e.textContent = text;
-
-  e.className =
-    'message' + (type ? ' ' + type : '');
+function message(id,text,type=''){
+  const e=$(id);
+  e.hidden=false;
+  e.textContent=text;
+  e.className='message'+(type?' '+type:'');
 }
 
-/* Apps Script 통신 */
+function saveSession(){
+  if(!session||!clubId)return;
+  try{
+    localStorage.setItem(STORAGE_KEY,JSON.stringify({
+      session,clubId,savedAt:Date.now()
+    }));
+  }catch(e){console.warn('세션 저장 실패',e)}
+}
 
-function api(action, data = {}) {
-  return new Promise((resolve, reject) => {
-    queue.push({
-      action,
-      data,
-      resolve,
-      reject
-    });
+function clearSession(){
+  try{localStorage.removeItem(STORAGE_KEY)}catch(e){}
+}
 
+function api(action,data={}){
+  return new Promise((resolve,reject)=>{
+    queue.push({action,data,resolve,reject});
     nextRequest();
   });
 }
 
-function nextRequest() {
-  if (pending || !queue.length) return;
+function nextRequest(){
+  if(pending||!queue.length)return;
+  const job=queue.shift();
+  const requestId=crypto.randomUUID();
+  const form=document.createElement('form');
+  form.method='POST';
+  form.action=API_URL;
+  form.target='festivalGatewayFrame';
+  form.hidden=true;
 
-  const job = queue.shift();
-  const requestId = crypto.randomUUID();
-
-  const form = document.createElement('form');
-
-  form.method = 'POST';
-  form.action = API_URL;
-  form.target = 'festivalGatewayFrame';
-  form.hidden = true;
-
-  const params = {
-    action: job.action,
-    requestId,
-    ...job.data
-  };
-
-  Object.entries(params).forEach(
-    ([key, value]) => {
-      const input =
-        document.createElement('input');
-
-      input.type = 'hidden';
-      input.name = key;
-      input.value = String(value ?? '');
-
-      form.appendChild(input);
-    }
-  );
-
+  const params={action:job.action,requestId,...job.data};
+  Object.entries(params).forEach(([key,value])=>{
+    const input=document.createElement('input');
+    input.type='hidden';
+    input.name=key;
+    input.value=String(value??'');
+    form.appendChild(input);
+  });
   document.body.appendChild(form);
 
-  const timeout = setTimeout(() => {
-    if (
-      !pending ||
-      pending.id !== requestId
-    ) return;
-
-    pending = null;
+  const timeout=setTimeout(()=>{
+    if(!pending||pending.id!==requestId)return;
+    pending=null;
     form.remove();
-
     job.reject(new Error(
-      '서버 응답이 없습니다. ' +
-      'Apps Script 배포를 확인하세요.'
+      '서버 응답이 없습니다. Apps Script 배포를 확인하세요.'
     ));
-
     nextRequest();
-  }, 20000);
+  },20000);
 
-  pending = {
-    id: requestId,
-    job,
-    form,
-    timeout
-  };
-
+  pending={id:requestId,job,form,timeout};
   form.submit();
 }
 
-window.addEventListener('message', event => {
+window.addEventListener('message',event=>{
   let host;
-
-  try {
-    host = new URL(event.origin).hostname;
-  } catch (_) {
-    return;
-  }
-
-  if (!(
-    host === 'script.google.com' ||
-    host === 'script.googleusercontent.com' ||
+  try{host=new URL(event.origin).hostname}catch(_){return}
+  if(!(
+    host==='script.google.com'||
+    host==='script.googleusercontent.com'||
     host.endsWith('.googleusercontent.com')
-  )) return;
+  ))return;
 
-  const data = event.data;
+  const data=event.data;
+  if(!pending||!data||
+    data.type!=='FESTIVAL_GATEWAY_RESPONSE'||
+    data.requestId!==pending.id)return;
 
-  if (
-    !pending ||
-    !data ||
-    data.type !== 'FESTIVAL_GATEWAY_RESPONSE' ||
-    data.requestId !== pending.id
-  ) return;
-
-  const current = pending;
-  pending = null;
-
+  const current=pending;
+  pending=null;
   clearTimeout(current.timeout);
   current.form.remove();
 
-  if (data.ok) {
+  if(data.ok){
     current.job.resolve(data.data);
-  } else {
-    current.job.reject(
-      new Error(
-        data.error || '서버 오류'
-      )
-    );
+  }else{
+    current.job.reject(new Error(data.error||'서버 오류'));
   }
-
   nextRequest();
 });
 
-/* 관리자 로그인 */
+function startCountTimer(){
+  clearInterval(timer);
+  timer=setInterval(()=>{
+    if(session&&!document.hidden&&!busy)refreshCount();
+  },60000);
+}
 
-$('code').addEventListener('input', () => {
-  $('code').value = $('code').value
-    .toUpperCase()
-    .replace(/[^0-9A-F]/g, '')
-    .slice(0, 8);
-});
+function showManager(name){
+  $('loginPage').hidden=true;
+  $('managerPage').hidden=false;
+  $('managerTitle').textContent=name+' 관리자';
+  resetScanUI();
+  startCountTimer();
+}
 
-async function login() {
-  const selected = $('club').value;
+function resetScanUI(){
+  mode=null;
+  lastToken='';
+  lastAt=0;
+  $('scannerBox').dataset.mode='none';
+  $('enterModeBtn').classList.remove('active');
+  $('exitModeBtn').classList.remove('active');
+  $('scanModeLabel').textContent='스캔 대기 중';
+  $('scanModeLabel').classList.remove('running');
+  $('stopBtn').hidden=true;
+  $('stopBtn').disabled=false;
+  $('studentResult').hidden=true;
+  message('scanStatus',
+    '위에서 입장 또는 퇴장 스캔을 선택하세요.');
+}
 
-  const code = $('code').value
-    .trim()
-    .toUpperCase();
+async function login(){
+  if(session)return;
+  const selected=$('club').value;
+  const code=$('code').value.trim().toUpperCase();
 
-  if (!/^[0-9A-F]{8}$/.test(code)) {
-    message(
-      'loginMessage',
-      '관리자코드 8자리를 입력하세요.',
-      'error'
-    );
+  if(!selected||!clubMap.has(selected)){
+    message('loginMessage','동아리를 먼저 선택하세요.','error');
+    return;
+  }
+  if(!/^[0-9A-F]{8}$/.test(code)){
+    message('loginMessage','관리자코드 8자리를 입력하세요.','error');
     return;
   }
 
-  $('loginBtn').disabled = true;
+  $('loginBtn').disabled=true;
+  message('loginMessage','로그인 확인 중...');
 
-  message(
-    'loginMessage',
-    '로그인 확인 중...'
-  );
-
-  try {
-    const result = await api('login', {
-      clubId: selected,
-      code
-    });
-
-    if (!result || !result.session) {
-      throw new Error(
-        '관리자 세션을 받지 못했습니다.'
-      );
+  try{
+    const result=await api('login',{clubId:selected,code});
+    if(!result||!result.session){
+      throw new Error('관리자 세션을 받지 못했습니다.');
     }
-
-    session = result.session;
-    clubId = selected;
-
-    $('code').value = '';
-    $('loginPage').hidden = true;
-    $('managerPage').hidden = false;
-
-    $('managerTitle').textContent =
-      (result.clubName ||
-       clubMap.get(selected)) +
-      ' 관리자';
-
-    resetScanUI();
-
-    // 로그인 후 인원만 조회
-    // 카메라는 관리자가 모드를 선택할 때 실행
+    session=result.session;
+    clubId=selected;
+    saveSession();
+    $('code').value='';
+    showManager(result.clubName||clubMap.get(selected));
     void refreshCount();
-
-    clearInterval(timer);
-
-    timer = setInterval(() => {
-      if (
-        session &&
-        !document.hidden &&
-        !busy
-      ) {
-        refreshCount();
-      }
-    }, 60000);
-
-  } catch (e) {
-    message(
-      'loginMessage',
-      '로그인 실패: ' + e.message,
-      'error'
-    );
-  } finally {
-    $('loginBtn').disabled = false;
+  }catch(e){
+    message('loginMessage','로그인 실패: '+e.message,'error');
+  }finally{
+    $('loginBtn').disabled=false;
   }
 }
 
-/* 현재 부스 인원 조회 */
+async function restoreLogin(){
+  let saved;
+  try{
+    saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');
+  }catch(e){
+    clearSession();
+    return;
+  }
+  if(!saved)return;
 
-async function refreshCount() {
-  if (!session) return;
+  if(!saved.session||!clubMap.has(saved.clubId)||
+    !Number.isFinite(saved.savedAt)||
+    Date.now()<saved.savedAt||
+    Date.now()-saved.savedAt>MAX_REMEMBER_MS){
+    clearSession();
+    return;
+  }
 
-  const current = session;
+  message('loginMessage','이전 로그인 상태 확인 중...');
+  $('loginBtn').disabled=true;
 
-  $('countStatus').textContent =
-    '인원 조회 중...';
+  try{
+    const result=await api('count',{session:saved.session});
+    if(!result||result.currentCount==null){
+      throw new Error('세션 확인 실패');
+    }
+    session=saved.session;
+    clubId=saved.clubId;
+    showManager(clubMap.get(clubId));
+    $('currentCount').textContent=result.currentCount;
+    $('countStatus').textContent='로그인 상태 복원 완료';
+  }catch(e){
+    message('loginMessage',
+      '자동 로그인에 실패했습니다. 동아리와 관리자코드로 다시 로그인하세요.',
+      'error');
+    console.warn('세션 복원 실패',e);
+  }finally{
+    $('loginBtn').disabled=false;
+  }
+}
 
-  try {
-    const result = await api('count', {
-      session: current
-    });
+async function refreshCount(){
+  if(!session)return;
+  const current=session;
+  $('countStatus').textContent='인원 조회 중...';
 
-    if (current !== session) return;
-
-    $('currentCount').textContent =
-      result.currentCount ?? 0;
-
-    $('countStatus').textContent =
-      'Firebase 조회 완료';
-
-  } catch (e) {
-    if (current === session) {
-      $('countStatus').textContent =
-        '조회 실패: ' + e.message;
+  try{
+    const result=await api('count',{session:current});
+    if(current!==session)return;
+    $('currentCount').textContent=result.currentCount??0;
+    $('countStatus').textContent='Firebase 조회 완료';
+  }catch(e){
+    if(current===session){
+      $('countStatus').textContent='조회 실패: '+e.message;
     }
   }
 }
 
-/* 스캔 UI 초기화 */
-
-function resetScanUI() {
-  mode = 'enter';
-
-  $('enterModeBtn').classList.remove(
-    'active'
-  );
-
-  $('exitModeBtn').classList.remove(
-    'active'
-  );
-
-  $('scannerBox').dataset.mode = 'enter';
-
-  $('scanModeLabel').textContent =
-    '스캔 대기 중';
-
-  $('stopBtn').hidden = true;
-  $('stopBtn').disabled = true;
-
-  $('studentResult').hidden = true;
-
-  message(
-    'scanStatus',
-    '입장 또는 퇴장 스캔을 선택하세요.'
-  );
+function setModeVisual(next,running){
+  const isEnter=next==='enter';
+  $('scannerBox').dataset.mode=next||'none';
+  $('enterModeBtn').classList.toggle('active',running&&isEnter);
+  $('exitModeBtn').classList.toggle('active',running&&!isEnter);
+  $('scanModeLabel').classList.toggle('running',running);
+  $('scanModeLabel').textContent=running
+    ?(isEnter?'입장 처리 중':'퇴장 처리 중')
+    :'스캔 대기 중';
 }
 
-/* 입장/퇴장 선택 */
+async function selectMode(next){
+  if(!session||busy||starting||stopping||modeTransition)return;
+  if(next!=='enter'&&next!=='exit')return;
 
-async function setMode(next) {
-  if (!session) return;
+  modeTransition=true;
+  $('enterModeBtn').disabled=true;
+  $('exitModeBtn').disabled=true;
 
-  if (
-    busy ||
-    starting ||
-    stopping
-  ) return;
+  try{
+    if(scanner&&mode!==next){
+      await stopScanner(true);
+    }
+    mode=next;
+    lastToken='';
+    lastAt=0;
+    $('studentResult').hidden=true;
+    setModeVisual(next,true);
 
-  if (
-    next !== 'enter' &&
-    next !== 'exit'
-  ) return;
+    message('scanStatus',next==='enter'
+      ?'입장 모드 · 들어오는 학생의 QR을 비춰주세요.'
+      :'퇴장 모드 · 나가는 학생의 QR을 비춰주세요.');
 
-  // 모드 변경 전 기존 카메라 종료
-  if (scanner && mode !== next) {
-    await stopScanner(true);
+    if(!scanner)await startScanner();
+  }finally{
+    modeTransition=false;
+    $('enterModeBtn').disabled=false;
+    $('exitModeBtn').disabled=false;
   }
-
-  mode = next;
-
-  lastToken = '';
-  lastAt = 0;
-
-  const isEnter = next === 'enter';
-
-  $('enterModeBtn').classList.toggle(
-    'active',
-    isEnter
-  );
-
-  $('exitModeBtn').classList.toggle(
-    'active',
-    !isEnter
-  );
-
-  $('scannerBox').dataset.mode = next;
-
-  $('scanModeLabel').textContent =
-    isEnter
-      ? '🟢 입장 처리 중'
-      : '🔴 퇴장 처리 중';
-
-  $('studentResult').hidden = true;
-
-  message(
-    'scanStatus',
-    isEnter
-      ? '입장 모드 · 들어오는 학생의 QR을 비춰주세요.'
-      : '퇴장 모드 · 나가는 학생의 QR을 비춰주세요.'
-  );
-
-  // 모드 선택 시 카메라 자동 시작
-  await startScanner();
 }
 
-/* 카메라 시작 */
+async function startScanner(){
+  if(scanner||starting||stopping||!session||!mode)return;
 
-async function startScanner() {
-  if (
-    scanner ||
-    starting ||
-    stopping ||
-    !session
-  ) return;
-
-  if (typeof Html5Qrcode === 'undefined') {
-    message(
-      'scanStatus',
-      '카메라 라이브러리 로딩 실패',
-      'error'
-    );
+  if(typeof Html5Qrcode==='undefined'){
+    message('scanStatus',
+      '카메라 라이브러리를 불러오지 못했습니다. 페이지를 새로고침하세요.',
+      'error');
+    setModeVisual(null,false);
     return;
   }
 
-  starting = true;
+  starting=true;
+  const instance=new Html5Qrcode('reader');
+  scanner=instance;
 
-  $('enterModeBtn').disabled = true;
-  $('exitModeBtn').disabled = true;
-
-  const instance =
-    new Html5Qrcode('reader');
-
-  scanner = instance;
-
-  try {
+  try{
     await instance.start(
-      {
-        facingMode: 'environment'
-      },
-      {
-        fps: 10,
-        qrbox: {
-          width: 220,
-          height: 220
-        }
-      },
+      {facingMode:'environment'},
+      {fps:10,qrbox:{width:220,height:220}},
       scanSuccess,
-      () => {}
+      ()=>{}
     );
-
-    $('stopBtn').hidden = false;
-    $('stopBtn').disabled = false;
-
-    message(
-      'scanStatus',
-      (mode === 'enter'
-        ? '🟢 입장'
-        : '🔴 퇴장') +
-      ' 모드 · 카메라 실행 중'
-    );
-
-  } catch (e) {
-    scanner = null;
-
-    message(
-      'scanStatus',
-      '카메라 오류: ' + e.message +
-      '\n다시 입장 또는 퇴장 스캔을 눌러주세요.',
-      'error'
-    );
-
-    try {
-      instance.clear();
-    } catch (_) {}
-
-    $('stopBtn').hidden = true;
-
-  } finally {
-    starting = false;
-
-    $('enterModeBtn').disabled = false;
-    $('exitModeBtn').disabled = false;
+    $('stopBtn').hidden=false;
+    $('stopBtn').disabled=false;
+    message('scanStatus',
+      (mode==='enter'?'입장':'퇴장')+' 모드 · 카메라 실행 중');
+  }catch(e){
+    scanner=null;
+    try{instance.clear()}catch(_){}
+    $('stopBtn').hidden=true;
+    setModeVisual(null,false);
+    message('scanStatus',
+      '카메라 실행 실패: '+e.message+
+      '\n입장 또는 퇴장 스캔 버튼을 다시 눌러주세요.',
+      'error');
+  }finally{
+    starting=false;
   }
 }
 
-/* 카메라 종료 */
+async function stopScanner(silent=false){
+  if(stopping)return;
+  stopping=true;
+  const instance=scanner;
+  scanner=null;
 
-async function stopScanner(silent = false) {
-  if (stopping) return;
-
-  stopping = true;
-
-  const instance = scanner;
-  scanner = null;
-
-  try {
-    if (instance) {
-      if (instance.isScanning) {
-        await instance.stop();
-      }
-
+  try{
+    if(instance){
+      if(instance.isScanning)await instance.stop();
       instance.clear();
     }
-  } catch (e) {
+  }catch(e){
     console.error(e);
-  } finally {
-    $('stopBtn').disabled = true;
-    $('stopBtn').hidden = true;
-
-    stopping = false;
+  }finally{
+    stopping=false;
+    $('stopBtn').hidden=true;
+    $('stopBtn').disabled=false;
   }
 
-  if (!silent) {
-    $('enterModeBtn').classList.remove(
-      'active'
-    );
-
-    $('exitModeBtn').classList.remove(
-      'active'
-    );
-
-    $('scanModeLabel').textContent =
-      '스캔 종료됨';
-
-    message(
-      'scanStatus',
-      '스캔이 종료되었습니다. ' +
-      '다시 시작하려면 입장 또는 퇴장 스캔을 눌러주세요.'
-    );
+  if(!silent){
+    mode=null;
+    setModeVisual(null,false);
+    message('scanStatus',
+      '스캔을 종료했습니다. 입장 또는 퇴장 스캔을 눌러 다시 시작하세요.');
   }
 }
 
-/* QR 스캔 성공 */
+async function scanSuccess(value){
+  if(busy||!session||stopping||modeTransition||!mode)return;
 
-async function scanSuccess(value) {
-  if (
-    busy ||
-    !session ||
-    stopping
-  ) return;
+  const token=String(value||'').trim().toLowerCase();
+  const now=Date.now();
 
-  const token = String(value || '')
-    .trim()
-    .toLowerCase();
+  if(token===lastToken&&now-lastAt<5000)return;
+  lastToken=token;
+  lastAt=now;
 
-  const now = Date.now();
-
-  if (
-    token === lastToken &&
-    now - lastAt < 5000
-  ) return;
-
-  lastToken = token;
-  lastAt = now;
-
-  if (!/^[0-9a-f]{64}$/.test(token)) {
-    message(
-      'studentResult',
-      '올바른 학생 QR이 아닙니다.',
-      'error'
-    );
+  if(!/^[0-9a-f]{64}$/.test(token)){
+    message('studentResult','올바른 학생 QR이 아닙니다.','error');
     return;
   }
 
-  busy = true;
+  busy=true;
+  const current=session;
+  const requestedMode=mode;
 
-  const current = session;
-  const requestedMode = mode;
+  $('enterModeBtn').disabled=true;
+  $('exitModeBtn').disabled=true;
+  $('stopBtn').disabled=true;
+  message('scanStatus',
+    (requestedMode==='enter'?'입장':'퇴장')+' 처리 중...');
 
-  $('enterModeBtn').disabled = true;
-  $('exitModeBtn').disabled = true;
-  $('stopBtn').disabled = true;
+  try{
+    const result=await api('attendance',{
+      session:current,
+      token,
+      mode:requestedMode
+    });
+    if(current!==session)return;
 
-  message(
-    'scanStatus',
-    (requestedMode === 'enter'
-      ? '입장'
-      : '퇴장') +
-    ' 처리 중...'
-  );
-
-  try {
-    const result = await api(
-      'attendance',
-      {
-        session: current,
-        token,
-        mode: requestedMode
-      }
-    );
-
-    if (current !== session) return;
-
-    if (
-      result.currentCount !== null &&
-      result.currentCount !== undefined
-    ) {
-      $('currentCount').textContent =
-        result.currentCount;
-
-      $('countStatus').textContent =
-        '처리 완료';
+    if(result.currentCount!==null&&result.currentCount!==undefined){
+      $('currentCount').textContent=result.currentCount;
+      $('countStatus').textContent='처리 완료';
     }
 
-    const other =
-      result.previousClubId ||
-      result.currentClubId ||
-      '';
-
-    const lines = {
-      entered:
-        '🟢 입장 완료 (+1명)',
-
-      exited:
-        '🔴 퇴장 완료 (-1명)',
-
-      transferred:
-        '🟢 다른 부스에서 이동 완료 (+1명)',
-
-      already_inside:
-        '이미 이 부스에 입장한 학생입니다. ' +
-        '(인원 변경 없음)',
-
-      not_inside:
-        other
-          ? '이 부스에 입장 중이 아닙니다. ' +
-            '현재 부스: ' +
-            (clubMap.get(other) || other)
-          : '이 부스에 입장 중이 아닙니다. ' +
-            '(인원 변경 없음)'
+    const other=result.previousClubId||result.currentClubId||'';
+    const lines={
+      entered:'입장 완료 (+1명)',
+      exited:'퇴장 완료 (-1명)',
+      transferred:'다른 부스에서 이동 완료 (+1명)',
+      already_inside:'이미 이 부스에 입장한 학생입니다. (인원 변경 없음)',
+      not_inside:other
+        ?'이 부스에 입장 중이 아닙니다. 현재 부스: '+(clubMap.get(other)||other)
+        :'이 부스에 입장 중이 아닙니다. (인원 변경 없음)'
     };
 
-    const text =
-      lines[result.action] ||
-      '처리 결과를 확인하지 못했습니다.';
+    message('studentResult',
+      lines[result.action]||'처리 결과를 확인하지 못했습니다.',
+      result.changed?'success':
+      result.action==='already_inside'?'':'error');
 
-    message(
-      'studentResult',
-      text,
-      result.changed
-        ? 'success'
-        : (
-            result.action === 'already_inside'
-              ? ''
-              : 'error'
-          )
-    );
-
-    message(
-      'scanStatus',
-      (requestedMode === 'enter'
-        ? '🟢 입장'
-        : '🔴 퇴장') +
-      ' 모드 · 다음 QR 스캔 가능'
-    );
-
-  } catch (e) {
-    lastToken = '';
-    lastAt = 0;
-
-    if (current === session) {
-      message(
-        'studentResult',
-        '처리 실패: ' + e.message,
-        'error'
-      );
-
-      message(
-        'scanStatus',
-        '실패 · 다시 스캔할 수 있습니다'
-      );
+    message('scanStatus',
+      (requestedMode==='enter'?'입장':'퇴장')+
+      ' 모드 · 다음 QR 스캔 가능');
+  }catch(e){
+    lastToken='';
+    lastAt=0;
+    if(current===session){
+      message('studentResult','처리 실패: '+e.message,'error');
+      message('scanStatus','실패 · 다시 스캔할 수 있습니다');
     }
-  } finally {
-    busy = false;
-
-    $('enterModeBtn').disabled = false;
-    $('exitModeBtn').disabled = false;
-
-    $('stopBtn').disabled =
-      !scanner;
+  }finally{
+    busy=false;
+    $('enterModeBtn').disabled=false;
+    $('exitModeBtn').disabled=false;
+    $('stopBtn').disabled=!scanner;
   }
 }
 
-/* 로그아웃 */
+async function logout(){
+  if(busy||starting||stopping||modeTransition)return;
 
-async function logout() {
-  const old = session;
-
-  session = null;
-  clubId = null;
-
+  const old=session;
+  session=null;
+  clubId=null;
+  clearSession();
   clearInterval(timer);
-
   await stopScanner(true);
 
-  $('managerPage').hidden = true;
-  $('loginPage').hidden = false;
-
-  $('studentResult').hidden = true;
-  $('currentCount').textContent = '-';
-
-  lastToken = '';
-  lastAt = 0;
-
+  $('managerPage').hidden=true;
+  $('loginPage').hidden=false;
+  $('currentCount').textContent='-';
+  $('club').value='';
+  $('code').value='';
   resetScanUI();
+  message('loginMessage','로그아웃되었습니다.');
 
-  message(
-    'loginMessage',
-    '로그아웃되었습니다.'
-  );
-
-  if (old) {
-    try {
-      await api('logout', {
-        session: old
-      });
-    } catch (e) {
-      console.error(e);
+  if(old){
+    try{
+      await api('logout',{session:old});
+    }catch(e){
+      console.warn(e);
     }
   }
 }
 
-/* 버튼 이벤트 */
+$('loginBtn').addEventListener('click',login);
+$('refreshBtn').addEventListener('click',refreshCount);
+$('enterModeBtn').addEventListener('click',()=>selectMode('enter'));
+$('exitModeBtn').addEventListener('click',()=>selectMode('exit'));
+$('stopBtn').addEventListener('click',()=>stopScanner());
+$('logoutBtn').addEventListener('click',logout);
 
-$('loginBtn').addEventListener(
-  'click',
-  login
-);
+$('code').addEventListener('input',()=>{
+  $('code').value=$('code').value
+    .toUpperCase().replace(/[^0-9A-F]/g,'').slice(0,8);
+});
 
-$('refreshBtn').addEventListener(
-  'click',
-  refreshCount
-);
+$('code').addEventListener('keydown',e=>{
+  if(e.key==='Enter')void login();
+});
 
-$('enterModeBtn').addEventListener(
-  'click',
-  () => setMode('enter')
-);
-
-$('exitModeBtn').addEventListener(
-  'click',
-  () => setMode('exit')
-);
-
-$('stopBtn').addEventListener(
-  'click',
-  () => stopScanner()
-);
-
-$('logoutBtn').addEventListener(
-  'click',
-  logout
-);
-
-$('code').addEventListener(
-  'keydown',
-  e => {
-    if (e.key === 'Enter') {
-      login();
-    }
-  }
-);
+void restoreLogin();
 </script>
 </body>
 </html>
